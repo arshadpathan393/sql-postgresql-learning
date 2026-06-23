@@ -273,7 +273,7 @@ Important Notes
 Feature                 BLOB                            CLOB
 Full Form               Binary Large Object             Character Large Object
 Stores                  Binary Data                     Character/Text Data
-Data Type               Images,Videos,PDFs              Documents,Articles,XML
+Examples                Images, Videos, PDFs            Documents, Articles, XML
 Readable as Text        No                              Yes
 Common Usage            Files, Media                    Large Text Content
 
