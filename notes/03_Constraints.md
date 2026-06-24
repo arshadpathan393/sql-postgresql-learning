@@ -338,6 +338,113 @@
     
 ---
 
+## Key Concepts
+    Keys are used to identify records uniquely and establish relationships
+    between tables.
+
+### Types of Keys
+1. Super Key
+2. Candidate Key
+3. Primary Key
+4. Alternate Key
+5. Composite Key
+6. Foreign Key
+
+#### 1. Super Key
+    -> A Super Key is a column or combination of columns that can uniquely
+       identify a row.
+
+    Example:
+        Employee Table :
+        emp_id    email               mobile
+        101       a@gmail.com         9876543210
+
+    Possible Super Keys:
+        emp_id
+        email
+        mobile
+        emp_id + email (combinations)
+
+    Important Notes
+        -> Can contain extra columns.
+        -> Multiple Super Keys can exist in a table.
+
+#### 2. Candidate Key
+    -> A Candidate Key is the minimum set of columns required to uniquely
+       identify a row.
+
+    Example:
+        emp_id
+        email
+        mobile
+
+    All three can uniquely identify a record.
+    Therefore:
+        emp_id
+        email
+        mobile
+    are Candidate Keys.
+
+    Important Notes
+        -> Candidate Key is a minimal Super Key.
+        -> No unnecessary columns are present.
+
+#### 3. Primary Key
+    -> A Candidate Key selected to uniquely identify records is called a
+       Primary Key.
+
+    Example:
+        emp_id
+
+    Important Notes
+        -> Only one Primary Key per table.
+        -> Cannot contain NULL values.
+        -> Cannot contain duplicate values.
+
+#### 4. Alternate Key
+    -> Candidate Keys that are not selected as Primary Key are called
+       Alternate Keys.
+
+    Example:
+        Candidate Keys:
+            emp_id
+            email
+            mobile
+
+        Primary Key:
+            emp_id
+
+        Alternate Keys:
+            email
+            mobile
+
+#### 5. Composite Key
+    -> A key formed using multiple columns is called a Composite Key.
+
+    Example:
+        student_id + course_id
+        PRIMARY KEY(student_id, course_id)
+
+    Important Notes
+        -> Combination must be unique.
+        -> Individual columns may contain duplicate values.
+
+#### 6. Foreign Key
+    -> A Foreign Key is a column that refers to the Primary Key of another
+       table.
+    Purpose
+        -> Establish relationship between tables.
+        -> Maintain referential integrity.
+
+    Example:
+        Department Table :
+        dept_id     dept_name
+
+        Employee Table :
+        emp_id      emp_name      dept_id
+
+        dept_id in Employee table references Department table.
+
 ## Summary
 
     NOT NULL
@@ -362,21 +469,21 @@
 
 ## Most Asked Interview Questions
 
-Q. Difference between PRIMARY KEY and UNIQUE?
-    Ans.-> PRIMARY KEY does not allow NULL values.
-        -> UNIQUE allows NULL values.
+    Q. Difference between PRIMARY KEY and UNIQUE?
+        Ans.-> PRIMARY KEY does not allow NULL values.
+            -> UNIQUE allows NULL values.
 
-Q. Can a table have multiple PRIMARY KEY constraints?
-    Ans.-> No, only one PRIMARY KEY.
+    Q. Can a table have multiple PRIMARY KEY constraints?
+        Ans.-> No, only one PRIMARY KEY.
 
-Q. Can a FOREIGN KEY contain duplicate values?
-    Ans.-> Yes.
+    Q. Can a FOREIGN KEY contain duplicate values?
+        Ans.-> Yes.
 
-Q. Can a FOREIGN KEY contain NULL values?
-    Ans.-> Yes.
+    Q. Can a FOREIGN KEY contain NULL values?
+        Ans.-> Yes.
 
-Q. Which constraint creates relationships between tables?
-    Ans.-> FOREIGN KEY.
+    Q. Which constraint creates relationships between tables?
+        Ans.-> FOREIGN KEY.
 
-Q. Which constraint is a combination of UNIQUE and NOT NULL?
-    Ans.-> PRIMARY KEY.
+    Q. Which constraint is a combination of UNIQUE and NOT NULL?
+        Ans.-> PRIMARY KEY.
