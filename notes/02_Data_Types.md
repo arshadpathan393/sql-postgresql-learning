@@ -1,7 +1,7 @@
 
 ## Data Integrity (Validation) 
 
--> Data integrity is used to maintane accuracy, correctness, and consistency of a table (ACC).
+-> Data integrity is used to maintain accuracy, correctness, and consistency of a table (ACC).
 -> We can achieve data integrity with the help of data types and constraints.
 -> Data entered into a table can be validated in two ways: 
     1. Data Types -> Data types define what type of data can be stored in a column. 
@@ -62,7 +62,7 @@
         VARCHAR(10)
         Value stored: ARSHAD
         Storage used: ARSHAD    
-    Only 6 characters are stored, unlike CHAR, remaining spaces are not padded.
+        Only 6 characters are stored, unlike CHAR, remaining spaces are not padded.
 
         Feature	            Oracle            	    MySQL	             PostgreSQL
         Datatype	    VARCHAR / VARCHAR2  	    VARCHAR	                VARCHAR
@@ -91,8 +91,7 @@
         -> Variable length allocation.
         -> Does not pad extra spaces.
         -> Oracle recommends VARCHAR2 instead of VARCHAR.
-        -> Maximum size according to your notes:
-        -> 4000 characters
+        -> Maximum size according to your notes: 4000 characters
 
                             Oracle                  MySQL                              PostgreSQL
     Feature	                Oracle	                MySQL	                           PostgreSQL
@@ -293,3 +292,10 @@ Q. Which datatype is used to store images in a database?
 
 Q. Difference between BLOB and CLOB?
     Ans. BLOB stores binary data, whereas CLOB stores character/text data.
+
+### NULL
+    -> NULL is missing or unknown value
+    -> NULL is neither zero nor blank space
+    -> Memory will not get allocated by NULL
+    -> Any arithmetic operation performed with NULL it results into NULL only
+    -> No two NULL's are same

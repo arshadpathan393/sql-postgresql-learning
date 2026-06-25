@@ -153,13 +153,13 @@ Why RDBMS is preferred
 
 What is RDBMS?
 Answer: 
-RDBMS (Relational Database Management System) is a software and type of DBMS in which is used to stored the data in database for data manipulation using query language with relational model.
+RDBMS (Relational Database Management System) is a software and type of DBMS in which is used to interact with data in database for data manipulation using query language with relational model.
 RDBMS follows the concempt of E.F.Codd
 
 ### Table
     A table is a logical organization of data that consists of rows and columns.
     A table is used to store information about an entity.
-    A table in a structure or rows and columns
+    A table in a structure of rows and columns
     Example :
     EMP Table
         EMPNO	ENAME	JOB
@@ -253,5 +253,15 @@ What is a cell?
     
     Rule4: Null should be independent of datatype 
 
+### Schema
+    -> Schema is a logical structure of database
+    -> It contains tables, views, indexes, constraints etc.
+    -> Example :
+        HR Schema, Sales Schema
 
+### Instance
+    -> The data stored in database at a particular moment is called an instance.
+    -> Example
+        Emp table contains 14 rows today.
+        Tommorrow it may contains 15 rows.
 
