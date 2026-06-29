@@ -93,14 +93,14 @@
         -> Oracle recommends VARCHAR2 instead of VARCHAR.
         -> Maximum size according to your notes: 4000 characters
 
-                            Oracle                  MySQL                              PostgreSQL
-    Feature	                Oracle	                MySQL	                           PostgreSQL
-    Datatype	            VARCHAR2                Not Available	                   Not Available
-    Equivalent	            VARCHAR2	            VARCHAR	                           VARCHAR
-    Storage	                Variable Length         Variable Length	                   Variable Length
-    Recommended String Type	VARCHAR2	            VARCHAR	                           VARCHAR
-    Common Usage	        Name,Address,Email     Name,Address,Email               Name,Address
-                                                                                    Email
+                            Oracle                  MySQL                          PostgreSQL
+    Feature	                Oracle	                MySQL	                       PostgreSQL
+    Datatype	            VARCHAR2                Not Available	               Not Available
+    Equivalent	            VARCHAR2	            VARCHAR	                       VARCHAR
+    Storage	                Variable Length         Variable Length	               Variable Length
+    Recommended String Type	VARCHAR2	            VARCHAR	                       VARCHAR
+    Common Usage	        Name,Address,Email     Name,Address,Email              Name,Address
+                                                                                   Email
 
 #### VARCHAR vs VARCHAR2
 
@@ -131,9 +131,11 @@
 
     Purpose         Oracle          MySQL           PostgreSQL
      Integer        NUMBER          INT             INTEGER 
-     Decimal        NUMBER(10,2)    DECIMAL(10,2)   NUMERIC(10,2) 
+     Decimal        NUMBER(P,S)     DECIMAL(P,S)    NUMERIC(P,S) 
      Employee ID    NUMBER(5)       INT             INTEGER 
      Salary         NUMBER(10,2)    DECIMAL(10,2)   NUMERIC(10,2)
+
+     *P - Precision     *S- Scale
 
 Important Notes
     - Maximum precision in Oracle is 38.
@@ -192,7 +194,7 @@ Q. Does Oracle DATE store time?
 Q. Which datatype is preferred for date and time in PostgreSQL?
     Ans. TIMESTAMP
 
-### 6. CLOB (Character Large Object)
+### 6. CLOB / TEXT (Character Large Object)
 
     -> CLOB datatype is used to store large amounts of character data.
     -> It can store:
@@ -201,7 +203,7 @@ Q. Which datatype is preferred for date and time in PostgreSQL?
         - Articles
         - Large Descriptions
         - XML Data
-    -> Syntax : CLOB
+    -> Syntax : CLOB/TEXT
     -> Example : Employee Description, Book Content, Article Content
 
 #### Oracle vs MySQL vs PostgreSQL
@@ -214,7 +216,7 @@ Q. Which datatype is preferred for date and time in PostgreSQL?
 
 Important Notes
 
-    - CLOB is used for very large text data.
+    - CLOB/TEXT is used for very large text data.
     - No size needs to be specified.
     - Suitable for storing paragraphs, articles and documents.
     - Not suitable for calculations because it stores text.
@@ -230,7 +232,7 @@ Q. What is the PostgreSQL equivalent of CLOB?
 Q. What type of data is stored in CLOB?
     Ans. Large character/text data
 
-### 7. BLOB (Binary Large Object)
+### 7. BLOB/BYTEA (Binary Large Object)
 
     -> BLOB datatype is used to store large amounts of binary data.
     -> It can store:
@@ -240,7 +242,7 @@ Q. What type of data is stored in CLOB?
         PDF Documents
         Executable Files
         Binary Data
-    -> Syntax : BLOB
+    -> Syntax : BLOB/BYTEA
     -> Example : Employee Photo,Student Signature,Passport Scan,Video File,PDF Document
     -> Characteristics
         -> Stores data in binary format.
@@ -292,6 +294,76 @@ Q. Which datatype is used to store images in a database?
 
 Q. Difference between BLOB and CLOB?
     Ans. BLOB stores binary data, whereas CLOB stores character/text data.
+
+### 8. BOOLEAN
+    -> BOOLEAN datatype is used to store logical values.
+    -> It represents truth values.
+    -> It can store:
+        - TRUE
+        - FALSE
+        - NULL (unknown / not set)
+    -> Syntax : BOOLEAN
+    -> Example : is_active, is_verified, has_paid
+
+    Feature                 Oracle                  MySQL               PostgreSQL
+    Datatype               No native BOOLEAN*      TINYINT(1) / BOOL     BOOLEAN
+    Stores Logical Data    Indirect (1/0)          Yes                  Yes
+    True/False Support     Limited                 Yes                  Yes
+    Common Usage           Flags, conditions       Flags, conditions    Flags, conditions
+
+    *Oracle uses NUMBER(1) or CHAR(1) instead of native BOOLEAN in tables (mainly in SQL, not PL/SQL).
+
+    Important Notes
+    - BOOLEAN is used for yes/no or true/false values.
+    - It improves readability compared to numeric flags (0/1).
+    - Cannot be used directly in arithmetic operations.
+    - Commonly used in conditions, filters, and status fields.
+
+    Interview Point
+
+    Q. What does BOOLEAN represent?
+    Ans. Logical values (TRUE, FALSE, NULL)
+
+    Q. Which database has native BOOLEAN support?
+    Ans. PostgreSQL
+
+    Q. What is MySQL BOOLEAN internally stored as?
+    Ans. TINYINT(1)
+
+### 9. TIMESTAMP
+    -> TIMESTAMP datatype is used to store date and time values.
+    -> It stores both date and time with precision.
+    -> It can store:
+        - Date (YYYY-MM-DD)
+        - Time (HH:MM:SS)
+        - Fractional seconds (optional depending on DB)
+        - Time zone (in some databases)
+    -> Syntax : TIMESTAMP
+    -> Example : order_date, created_at, updated_at
+
+    Feature                 Oracle                  MySQL                     PostgreSQL
+    Datatype               TIMESTAMP              TIMESTAMP / DATETIME      TIMESTAMP
+    Stores Date & Time     Yes                    Yes                       Yes
+    Time Zone Support      TIMESTAMP WITH TZ      TIMESTAMP / DATETIME      TIMESTAMP WITH TZ
+    Precision              Up to fractional sec   Up to fractional sec      High precision support
+
+    Important Notes
+    - TIMESTAMP is used to store exact moment in time.
+    - More precise than DATE type.
+    - Often used for tracking records (created_at, updated_at).
+    - Can include time zone depending on DBMS.
+
+    Interview Point
+
+    Q. Difference between DATE and TIMESTAMP?
+    Ans. TIMESTAMP stores date + time with higher precision, DATE may store only date (and limited time depending on DBMS).
+
+    Q. What is TIMESTAMP used for?
+    Ans. To store precise date and time values.
+
+    Q. Does TIMESTAMP support time zones?
+    Ans. Yes, in some databases like Oracle and PostgreSQL.
+
 
 ### NULL
     -> NULL is missing or unknown value

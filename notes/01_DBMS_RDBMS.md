@@ -22,7 +22,7 @@ A DBMS acts as an interface between the user and the database.
 
 ### Basic Operations (CRUD)
 
-* Create (Insert)
+* Create (Create/Insert)
 * Read (Select)
 * Update (Modify)
 * Delete (Remove)
@@ -154,7 +154,7 @@ Why RDBMS is preferred
 What is RDBMS?
 Answer: 
 RDBMS (Relational Database Management System) is a software and type of DBMS in which is used to interact with data in database for data manipulation using query language with relational model.
-RDBMS follows the concempt of E.F.Codd
+RDBMS follows the concept of E.F.Codd
 
 ### Table
     A table is a logical organization of data that consists of rows and columns.
