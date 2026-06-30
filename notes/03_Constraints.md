@@ -124,9 +124,9 @@
 ---
 
 ## 3. PRIMARY KEY Constraint
-        -> PRIMARY KEY uniquely identifies each row in a table.
-        -> It is a combination of:
-            NOT NULL + UNIQUE
+    -> PRIMARY KEY uniquely identifies each row in a table.
+    -> It is a combination of:
+        NOT NULL + UNIQUE
 
 ### Syntax
     column_name datatype PRIMARY KEY
@@ -184,6 +184,7 @@
 ### Important Notes
     -> Combination must be unique.
     -> Individual column values may repeat.
+    -> NULL is not allowed in composite primary key
 
 ---
 
@@ -225,6 +226,184 @@
     -> Prevents orphan records.
     -> Improves data consistency.
 
+#### INLINE FOREIGN KEY
+    -> The foreign key is defined immediately after the column declaration.
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50)
+        dept_id INT REFERENCES department(dept_id)
+    );
+
+#### TABLE LEVEL FOREIGN KEY
+    -> The foreign key is declared separately after all columns have been defined.
+    CREATE TABLE employee(
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        FOREIGN KEY(dept_id) REFERENCES department(dept_id)
+    );
+    Advantages
+        -> Easier to read when there are multiple constraints.
+        -> Required for composite (multi-column) foreign keys.
+        -> Lets you give the constraint a meaningful name.
+
+#### ON DELETE CASCADE
+        -> When a parent row is deleted, all related child rows are automatically deleted.
+    
+#### ON UPDATE CASCADE
+        -> When the primary key value in the parent table changes, the foreign key values in the child table are automatically updated.
+    
+#### DEFERRABLE 
+        -> constraints allow a database to delay checking a constraint until later, usually at the end of the transaction instead of immediately after each SQL statement.
+
+This is useful when a transaction temporarily violates a constraint but is valid by the time all statements are complete.
+
+    Feature	                            Oracle	        MySQL	        PostgreSQL
+    Inline FOREIGN KEY	                ✅ Yes	        ✅ Yes	        ✅ Yes
+    Table-level FOREIGN KEY	            ✅ Yes	        ✅ Yes	        ✅ Yes
+    Named Constraint	        CONSTRAINT fk_name  CONSTRAINT fk_name  CONSTRAINT fk_name
+                                FOREIGN KEY...      FOREIGN  KEY...	    FOREIGN KEY...
+
+    ON DELETE CASCADE	                ✅ Yes	        ✅ Yes	        ✅ Yes
+    ON DELETE SET NULL	                ✅ Yes	        ✅ Yes	        ✅ Yes
+    ON UPDATE CASCADE	            ❌ Not Supported	    ✅ Yes  	        ✅ Yes
+    DEFERRABLE Constraints	            ✅ Yes	        ❌ No	        ✅ Yes
+    
+### Examples with different databases
+
+#### 1. Oracle Syntax
+    Parent Table
+    CREATE TABLE department (
+        dept_id NUMBER PRIMARY KEY,
+        dept_name VARCHAR2(50)
+    );
+    Child Table
+    CREATE TABLE employee (
+        emp_id NUMBER PRIMARY KEY,
+        emp_name VARCHAR2(50),
+        dept_id NUMBER,
+        CONSTRAINT fk_emp_dept
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+    );
+    
+##### With ON DELETE CASCADE
+    CREATE TABLE employee (
+        emp_id NUMBER PRIMARY KEY,
+        emp_name VARCHAR2(50),
+        dept_id NUMBER,
+        CONSTRAINT fk_emp_dept
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+        ON DELETE CASCADE
+    );
+
+##### Oracle Notes
+
+    -> Uses NUMBER instead of INT.
+    -> Uses VARCHAR2 instead of VARCHAR (recommended).
+    -> Does not support ON UPDATE CASCADE.
+    
+#### 2. MySQL Syntax
+    Parent Table
+    CREATE TABLE department (
+        dept_id INT PRIMARY KEY,
+        dept_name VARCHAR(50)
+    );
+    Child Table
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        CONSTRAINT fk_emp_dept
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+    );
+
+##### With ON DELETE CASCADE
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        CONSTRAINT fk_emp_dept
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+        ON DELETE CASCADE
+    );
+##### With ON UPDATE CASCADE
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+        ON UPDATE CASCADE
+    );
+
+##### MySQL Notes
+    -> Supports both ON DELETE CASCADE and ON UPDATE CASCADE.
+    -> Storage engine should support foreign keys (modern MySQL uses InnoDB by default).
+    
+#### 3. PostgreSQL Syntax
+    Parent Table
+    CREATE TABLE department (
+        dept_id INT PRIMARY KEY,
+        dept_name VARCHAR(50)
+    );
+    Child Table
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        CONSTRAINT fk_emp_dept
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+    );
+
+##### With ON DELETE CASCADE
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        CONSTRAINT fk_emp_dept
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+        ON DELETE CASCADE
+    );
+
+##### With ON UPDATE CASCADE
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        emp_name VARCHAR(50),
+        dept_id INT,
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+        ON UPDATE CASCADE
+    );
+
+##### DEFERRABLE Constraint (PostgreSQL Feature)
+    CREATE TABLE employee (
+        emp_id INT PRIMARY KEY,
+        dept_id INT,
+        FOREIGN KEY (dept_id)
+        REFERENCES department(dept_id)
+        DEFERRABLE INITIALLY DEFERRED
+    );
+
+##### PostgreSQL Notes
+    -> Supports ON UPDATE CASCADE.
+    -> Supports DEFERRABLE constraints, allowing foreign key checks to be postponed until transaction commit.
+
+### foreign key actions
+    Action	                What happens
+    CASCADE	        Automatically updates or deletes related child rows.
+    RESTRICT	    Prevents the update/delete if child rows exist.
+    NO ACTION	    Similar to RESTRICT in many databases; rejects the operation if it would 
+                    violate the foreign key constraint.
+    SET NULL	    Sets the foreign key in child rows to NULL (the column must allow NULL).
+    SET DEFAULT	    Sets the foreign key to its default value (supported by some database
+                    systems).
+
 ### Interview Point
 
     Q. What is the purpose of FOREIGN KEY?
@@ -233,6 +412,17 @@
     Q. Which table contains FOREIGN KEY?
     Ans. Child table.
 
+    Q. Can a child record exist without a matching parent?
+    Ans: No. The referenced parent key must already exist.
+
+    Q. Which database does not support ON UPDATE CASCADE?
+    Ans: Oracle.
+
+    Q. Which databases support DEFERRABLE foreign keys?
+    Ans: Oracle and PostgreSQL.
+
+    Q. Which storage engine in MySQL supports foreign keys?
+    Ans: InnoDB (the default engine in modern MySQL versions).
 ---
 
 ## 5. CHECK Constraint
