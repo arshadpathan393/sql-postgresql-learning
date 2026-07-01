@@ -45,6 +45,15 @@ SELECT * FROM employee;
     -> CREATE creates a new database object.
     -> Table name must be unique within a schema.
     -> Column names should be meaningful.
+    -> CREATE is used to create duplicate tables and views also
+
+### Creating Duplicate Table
+
+CREATE TABLE new_table_name 
+AS SELECT */column_names FROM old_table_name;
+
+#### Example
+CREATE TABLE emp1 AS SELECT * FROM employee;
 
 ### Interview Point
 Q. Which command is used to create a table?
@@ -120,6 +129,39 @@ Ans -> CREATE
     ALTER TABLE employee
     RENAME COLUMN emp_name TO employee_name;
 
+### ALTER ADD CONSTRAINT
+    ALTER TABLE employee
+    ADD CONSTRAINT pk PRIMARY KEY(emp_id)
+
+    ALTER TABLE employee
+    ADD CONSTRAINT fk 
+    FOREIGN KEY (dept_id)
+    REFERENCES department(dept_id)
+
+### ALTER DROP CONSTRAINT
+    ALTER TABLE employee
+    DROP CONSTRAINT pk
+
+    ALTER TABLE employee
+    DROP CONSTRAINT fk 
+    
+#### SET NOT NULL CONSTRAINT
+    ALTER TABLE employee
+    ALTER COLUMN emp_name SET NOT NULL;
+
+#### DROP NOT NULL CONSTRAINT
+    ALTER TABLE employee
+    ALTER COLUMN emp_name DROP NOT NULL;
+
+#### SET DEFAULT VALUE
+    ALTER TABLE employee
+    ALTER COLUMN city SET DEFAULT 'Mumbai';
+    
+#### DROP DEFAULT VALUE
+    ALTER TABLE employee
+    ALTER COLUMN city DROP DEFAULT;
+
+
 ### Important Notes
     -> ALTER changes only the structure.
     -> Existing data remains intact.
@@ -129,6 +171,9 @@ Ans -> CREATE
     Q. Which command is used to modify table structure?
     Ans. 
         -> ALTER
+    Q. Can we modify constraints using ALTER?
+    Ans.
+        → Yes (PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, DEFAULT)
     
 ---
 
