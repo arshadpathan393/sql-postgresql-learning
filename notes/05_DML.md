@@ -68,7 +68,7 @@
     SET salary = 50000
     WHERE emp_id = 101;
 
-### UPDATE Without WHERE
+### UPDATE ALL RECORDS
     UPDATE employee
     SET salary = 50000;
 
@@ -104,7 +104,7 @@
     DELETE FROM employee
     WHERE emp_id = 101;
 
-### DELETE Without WHERE
+### DELETE ALL RECORDS
     DELETE FROM employee;
 
 ### Result
@@ -174,7 +174,7 @@ Faster                 No              Yes
 ## Most Asked Interview Questions
     Q. What is DML?
     Ans.
-        -> Data Manipulation Language.
+        -   > Data Manipulation Language.
         -> Used to manipulate table data.
 
     Q. Which command inserts new records?
@@ -202,3 +202,17 @@ Faster                 No              Yes
         -> DELETE removes selected rows.
         -> TRUNCATE removes all rows.
 
+## Performance Tips
+### Best Practices
+        Always execute SELECT before UPDATE/DELETE.
+        Always use WHERE unless intentionally affecting all rows.
+        Perform DML inside transactions.
+        Test on development data first.
+        Commit only after verification.
+
+### Common Mistakes
+        UPDATE without WHERE.
+        DELETE without WHERE.
+        Forgetting COMMIT.
+        Committing incorrect data.
+        Inserting values without specifying column names.

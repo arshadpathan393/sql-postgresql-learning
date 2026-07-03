@@ -389,3 +389,16 @@ Ans -> CREATE
     Q. Which command renames a table?
     Ans.
         -> RENAME
+
+## Performance Tips
+### Best Practices
+        Give meaningful table and column names.
+        Follow a consistent naming convention.
+        Always define a PRIMARY KEY.
+        Use appropriate data types.
+        Keep DDL scripts in version control.
+### Common Mistakes
+        Creating tables without PRIMARY KEY.
+        Using VARCHAR for every column.
+        Dropping production tables accidentally.
+        Modifying table structure directly in production

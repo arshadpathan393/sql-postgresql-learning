@@ -124,7 +124,7 @@ EMPNO   ENAME   JOB   MGR   HIREDATE   SAL   COMM   DEPTNO
 
 ---
 
-## Column Alias (AS)
+## Alias Column (AS)
     -> Alias is a temporary name given to a column.
     -> It makes the output more meaningful and readable.
 ### Syntax

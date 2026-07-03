@@ -256,8 +256,45 @@ Ans.
     -> ROLLBACK TO SAVEPOINT performs a partial rollback.
     -> DDL statements generally perform an automatic COMMIT.
 
----
 
+---
+## DIFFERENCES
+
+1. Oracle and MySQL implicitly commit most DDL statements, so they cannot be rolled back. PostgreSQL treats most DDL as transactional, allowing CREATE, ALTER, DROP, and many other schema changes to be committed or rolled back as part of a transaction. Also, PostgreSQL aborts the entire transaction after an error until a ROLLBACK is issued, whereas Oracle and MySQL generally allow the transaction to continue after many statement-level errors.
+
+    Oracle                      vs                  PostgreSQL
+    Operation	                Oracle	            PostgreSQL
+    CREATE TABLE	            Auto-commits	    Transactional
+    ALTER TABLE	                Auto-commits	    Transactional
+    DROP TABLE	                Auto-commits	    Transactional
+    TRUNCATE TABLE	            Auto-commits	    Transactional
+    CREATE DATABASE	            N/A	                Cannot run in a transaction
+
+2. TCL Comparison: Oracle vs MySQL vs PostgreSQL
+    
+    Feature	                    Oracle	            MySQL (InnoDB)	            PostgreSQL
+    (Auto Commit by default)	❌ OFF(depends on    ✅ ON                    ✅ ON (most clients  
+                                client; SQL*Plus                                    like pgAdmin)
+                                doesn't auto-commit)		
+    (Manual COMMIT required)	✅ Yes	            ✅ If Auto Commit is OFF	✅ If Auto Commit 
+                                                                                is OFF
+    (ROLLBACK supported)	    ✅ Yes	            ✅ Yes	                ✅ Yes
+    (SAVEPOINT supported)	    ✅ Yes	            ✅ Yes	                ✅ Yes
+    (Nested Savepoints)	        ✅ Yes	            ✅ Yes	                ✅ Yes
+    (Transaction starts 
+    automatically on            ✅ Yes	            ✅ Yes	                ✅ Yes
+    first DML)	
+    (Explicit BEGIN required)	❌ No	            ❌ No(START TRANSACTION  ❌ No, but commonly
+                                                        /BEGIN optional)	 used for clarity
+    (DDL Auto Commits)	        ✅ Yes(implicit       ✅ Yes (most DDL)       ❌ No (most DDL is 
+                                commit before & after)		                        transactional)
+    (DDL can be rolled back)	❌ No	             ❌ Mostly No	        ✅ Yes (most DDL)
+    (Failed statement aborts    ❌ No	             ❌ No	                ✅ Yes
+    entire transaction)	
+    (Continue after an          ✅ Usually	         ✅ Usually	            ❌ No ROLLBACK)                                                      	
+    
+
+---
 ## Performance Tips
 ### Best Practices
     -> Use COMMIT only after verifying all changes.
@@ -270,3 +307,5 @@ Ans.
     -> Assuming ROLLBACK can undo committed changes.
     -> Creating a SAVEPOINT after executing COMMIT.
     -> Using SAVEPOINT without understanding transaction boundaries.
+
+
