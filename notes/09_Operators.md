@@ -170,8 +170,8 @@
     -> Returns rows where both values are equal.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal = 3000;
+    FROM table_name
+    WHERE col_name = value;
 ### Example
     SELECT empno,ename,sal
     FROM emp
@@ -222,8 +222,8 @@
     -> Returns rows having values less than the specified value.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal < 2000;
+    FROM table_name
+    WHERE col_name < value;
 ### Example
     SELECT ename,sal
     FROM emp
@@ -241,8 +241,8 @@
     -> Returns rows having values less than or equal to the specified value.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal <= 2000;
+    FROM table_name
+    WHERE col_name <= value;
 ### Example
     SELECT ename,sal
     FROM emp
@@ -261,8 +261,8 @@
     -> Returns rows having values greater than the specified value.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal > 3000;
+    FROM table_name
+    WHERE col_name > value;
 ### Example
     SELECT ename,sal
     FROM emp
@@ -281,8 +281,8 @@
     value.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal >= 3000;
+    FROM table_name
+    WHERE col_name >= value;
 ### Example
     SELECT ename,sal
     FROM emp
@@ -311,7 +311,7 @@
     -> Returns records only when all conditions are TRUE.
 ### Syntax
     SELECT *
-    FROM emp
+    FROM table_name
     WHERE condition1 AND condition2;
 ### Example
     SELECT empno, ename, sal, deptno
@@ -333,7 +333,7 @@
     -> Returns records when at least one condition is TRUE.
 ### Syntax
     SELECT *
-    FROM emp
+    FROM table_name
     WHERE condition1 OR condition2;
 ### Example
     SELECT empno, ename, deptno
@@ -353,7 +353,7 @@
     -> NOT reverses the result of a condition.
 ### Syntax
     SELECT *
-    FROM emp
+    FROM table_name
     WHERE NOT condition;
 ### Example
     SELECT empno, ename, deptno
@@ -391,8 +391,8 @@
 
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE deptno IN (10,20,30);
+    FROM table_name
+    WHERE col_name IN (val1,val2,val3...);
 ### Example
     SELECT empno, ename, deptno
     FROM emp
@@ -412,8 +412,8 @@
     -> NOT IN returns records that are not present in a specified list.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE deptno NOT IN (10,20);
+    FROM table_name
+    WHERE col_name NOT IN (val1,val2,val3...);
 ### Example
     SELECT empno, ename, deptno
     FROM emp
@@ -433,8 +433,8 @@
     -> Both boundary values are included.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal BETWEEN 1000 AND 3000;
+    FROM table_name
+    WHERE sal BETWEEN value1 AND value2;
 ### Example
     SELECT empno, ename, sal
     FROM emp
@@ -452,8 +452,8 @@
     -> NOT BETWEEN returns values outside the specified range.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal NOT BETWEEN 1000 AND 3000;
+    FROM table_name
+    WHERE sal NOT BETWEEN value1 AND value2;
 ### Example
     SELECT empno, ename, sal
     FROM emp
@@ -476,38 +476,23 @@
 
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE ename LIKE 'pattern';
+    FROM table_name
+    WHERE col_name LIKE 'pattern';
 ### Examples
     Employee names starting with 'S'
-
-    SELECT empno, ename
-    FROM emp
-    WHERE ename LIKE 'S%';
+        -> SELECT empno, ename FROM emp WHERE ename LIKE 'S%';
 
     Employee names ending with 'N'
-
-    SELECT empno, ename
-    FROM emp
-    WHERE ename LIKE '%N';
+        -> SELECT empno, ename FROM emp WHERE ename LIKE '%N';
 
     Employee names containing 'A'
-
-    SELECT empno, ename
-    FROM emp
-    WHERE ename LIKE '%A%';
+        -> SELECT empno, ename FROM emp WHERE ename LIKE '%A%';
 
     Employee names having exactly five characters
-
-    SELECT empno, ename
-    FROM emp
-    WHERE ename LIKE '_____';
+        -> SELECT empno, ename FROM emp WHERE ename LIKE '_____';
 
     Employee names starting with 'S' and ending with 'H'
-
-    SELECT empno, ename
-    FROM emp
-    WHERE ename LIKE 'S%H';
+        -> SELECT empno, ename FROM emp WHERE ename LIKE 'S%H';
 
 ### Important Notes
     -> '%' represents zero or more characters.
