@@ -190,8 +190,8 @@
     -> Returns rows where values are not equal.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE deptno <> 10;
+    FROM table_name
+    WHERE col_name <> value;
 ### Example
     SELECT empno,ename,deptno
     FROM emp
@@ -362,7 +362,7 @@
 ### Important Notes
     -> Converts TRUE to FALSE.
     -> Converts FALSE to TRUE.
-    -> Frequently used with IN, BETWEEN and LIKE.
+    -> Frequently used with IN, IS, BETWEEN and LIKE.
 ### Interview Point
     Q. What is the purpose of NOT operator?
     Ans.
@@ -473,11 +473,15 @@
 ### Wildcards Used with LIKE
     %       Represents zero or more characters.
     _       Represents exactly one character.
-
+### Escape Character
+    -> Escape Character is used in 'pattern string' to idicate that any wildcard character that occurs
+    after escape character should be treated as a regular chartacter
+    -> In excape character we use any special character except '%' and '_'
 ### Syntax
     SELECT *
     FROM table_name
-    WHERE col_name LIKE 'pattern';
+    WHERE col_name LIKE 'pattern'
+          escape 'escape character';
 ### Examples
     Employee names starting with 'S'
         -> SELECT empno, ename FROM emp WHERE ename LIKE 'S%';
@@ -511,8 +515,8 @@
     -> NOT LIKE returns rows that do not match a specified pattern.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE ename NOT LIKE 'S%';
+    FROM table_name
+    WHERE col_name NOT LIKE 'pattern';
 ### Example
     SELECT empno, ename
     FROM emp
@@ -530,8 +534,8 @@
     -> IS NULL returns rows containing NULL values.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE comm IS NULL;
+    FROM table_name
+    WHERE col_name IS NULL;
 ### Example
     SELECT empno, ename, comm
     FROM emp
@@ -551,8 +555,8 @@
     -> IS NOT NULL returns rows containing non-NULL values.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE comm IS NOT NULL;
+    FROM table_name
+    WHERE col_name IS NOT NULL;
 ### Example
     SELECT empno, ename, comm
     FROM emp
@@ -675,12 +679,10 @@
     -> The condition becomes TRUE if at least one value satisfies the condition.
 ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal > ANY
+    FROM table_name
+    WHERE col_name (Conditional_operator) ANY
     (
-        SELECT sal
-        FROM emp
-        WHERE deptno = 30
+        subquery
     );
     ### Example
     SELECT empno, ename, sal
@@ -707,12 +709,10 @@
     -> The condition becomes TRUE only if all comparisons are TRUE.
     ### Syntax
     SELECT *
-    FROM emp
-    WHERE sal > ALL
+    FROM table_name
+    WHERE col_name (Conditional_operator) ALL
     (
-        SELECT sal
-        FROM emp
-        WHERE deptno = 30
+        subquery
     );
 ### Example
     SELECT empno, ename, sal
