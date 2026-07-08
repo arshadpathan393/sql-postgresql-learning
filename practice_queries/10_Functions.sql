@@ -1,23 +1,23 @@
 -- HERE ALL PRACTICE QUERIES ARE WRITTEN FOR FUNCTIONS IN POSTGRESQL DATABASE
 -- FUNCTIONS
---A. MULTI ROW FUNCTIONS
---1. COUNT()
+A.--S MULTI ROW FUNCTIONS
+1.-- COUNT()
 SELECT COUNT(*) FROM emp1;
 SELECT COUNT(ename) FROM emp1;
 SELECT COUNT(comm) FROM emp1;
 
---2. SUM()
+2.-- SUM()
 SELECT SUM(sal) FROM emp1;
 
---3. AVG()
+3.-- AVG()
 SELECT AVG(sal) FROM emp1;
 SELECT AVG(sal) FROM emp1 WHERE deptno = 30;
 
---4. MIN()
+4.-- MIN()
 SELECT MIN(sal) FROM emp1;
 SELECT MIN(sal),MIN(ename),MIN(hiredate) FROM emp1;
 
---5. MAX()
+5.-- MAX()
 SELECT MAX(sal) FROM emp1;
 SELECT MAX(sal), MAX(hiredate), MAX(ename) FROM emp1;
 
@@ -136,3 +136,106 @@ Q--Find the average salary of employees hired before 01-JAN-1982.
 SELECT AVG(sal) FROM emp1
 WHERE hiredate <'1982-01-01'
 ----------------------------------------------------------------------------------------------
+B.-- SINGLE ROW FUNCTIONS
+1.-- CHARACTER FUNCTIONS
+a.-- CASE MANIPULATION
+--UPPER()
+SELECT UPPER('arshad');
+SELECT UPPER(ename) FROM emp1; 
+
+--LOWER()
+SELECT LOWER('ARSHAD');
+SELECT LOWER(ename) FROM emp1;
+
+--INITCAP()
+SELECT INITCAP('java backend dveloper');
+SELECT INITCAP('aRShaD');
+SELECT INITCAP(ename) FROM emp1;
+
+b.--CHARACTER MANIPULATION
+--LENGTH()
+SELECT LENGTH('ARSHAD');
+SELECT ename,LENGTH(ename) FROM emp1;
+
+--REVERSE()
+SELECT REVERSE('QSPIDERS');
+SELECT REVERSE(ename) FROM emp1;
+
+--REPLACE()
+SELECT REPLACE('QSPIDERS','Q','J');
+SELECT REPLACE('QSPIDERS','S','$');
+SELECT REPLACE('QSPIDERS','SPIDER','*');
+SELECT REPLACE('QSPIDERS','s','$'); --> Nothing will change - case sensitive
+SELECT REPLACE(job,'SALESMAN','SALES EXECUTIVE') FROM emp1;
+
+--CONCAT()
+SELECT CONCAT('QSPIDERS',' JSPIDERS');
+SELECT CONCAT(CONCAT('QSPIDERS',' JSPIDERS'),' HADAPSAR');
+SELECT CONCAT(ename,CONCAT('(',CONCAT(job,')'))) FROM emp1; --> ENAME(JOB)
+--OR 
+SELECT CONCAT(CONCAT(ename,CONCAT('(',job)),')') FROM emp1;
+
+--SUBSTR()
+SELECT SUBSTR('QSPIDERS',3,2);
+SELECT SUBSTR('QSPIDERS',3,-2); --> length cant be negtive (postegreSQL)
+SELECT SUBSTR('QSPIDERS',3);
+SELECT SUBSTR('QSPIDERS',0,2); --> fetches only first character because it starts from zero (postegreSQL)
+SELECT SUBSTR('QSPIDERS',1,2);
+SELECT SUBSTR(ename,1,3) FROM emp1;
+
+--INSTR() OR POSITION() OR STRPOS() 
+--oracle INSTR()
+SELECT INSTR('QSPIDERS','S',1,1) FROM dual; -> 2
+SELECT INSTR('QSPIDERS','S',1,2) FROM dual; -> 8
+SELECT INSTR('QSPIDERS','S',2,1) FROM dual; -> 2
+SELECT INSTR('QSPIDERS','S',1,3) FROM dual; -> 0 --> no of occurances are only 2
+SELECT INSTR('QSPIDERS','S',3,2) FROM dual; -> 0
+SELECT INSTR('QSPIDERS','S',-2,1) FROM dual; -> 2
+SELECT INSTR('QSPIDERS','S',-1,1) FROM dual; -> 8
+SELECT INSTR('QSPIDERS','S') FROM dual; -> 2
+SELECT INSTR('QSPIDERS','S',3) FROM dual; -> 8
+SELECT INSTR('QSPIDERS','S',0,2) FROM dual; -> 0 --> Position always starts with 1
+SELECT INSTR('QSPIDERS','S',1,0) FROM dual; -> error --> no.of occurances cant be 0
+SELECT INSTR('QSPIDERS','S',1,-1) FROM dual; -> error --> no.of occurances cant be negative
+--postrgreSQL POSITION()
+SELECT POSITION('S' IN 'QSPIDERS'); ->2
+SELECT POSITION('P' IN 'QSPIDERS'); ->3
+SELECT STRPOS('ARSHAD','S'); ->3
+SELECT STRPOS(SUBSTRING('QSPIDERS' FROM 3),'S') + 2; -> 8 --> position for second occurance of 'S'
+SELECT STRPOS(SUBSTRING('ARSHAD' FROM 2),'A') + 1; -> --> position for second occurance of 'A
+
+--TRIM()
+SELECT TRIM('   ARSHAD   ');
+SELECT TRIM('N' FROM 'NITIN');
+SELECT TRIM('N' FROM 'NIBM');
+SELECT TRIM('N' FROM 'MARTIN');
+SELECT TRIM(LEADING 'N' FROM 'NITIN');
+SELECT TRIM(TRAILING 'N' FROM 'NITIN');
+SELECT TRIM(BOTH 'N' FROM 'NITIN');
+SELECT TRIM(BOTH 'NI' FROM 'NITIN'); -> 'T'
+SELECT TRIM('NI' FROM 'NITINLMN'); -> TINLM
+SELECT TRIM('N' FROM 'NNITINN');
+SELECT TRIM('n' FROM 'NITIN'); --> Data is case sensitive
+SELECT TRIM('Q' FROM TRIM('S' FROM 'QPSIDERS')); -> PSIDER 
+
+--LTRIM()
+SELECT LTRIM('   QPSIDERS  ');
+SELECT LTRIM('NITIN','N');
+SELECT LTRIM('EAEATAEAE','EAT') --> TAEAE
+SELECT LTRIM('EAEATAEAE','EAT') --> REMOVES FULL STRING
+
+--RTRIM()
+SELECT RTRIM('  ARSHAD     ');
+SELECT RTRIM('NITIN','N');
+SELECT RTRIM('EAEATAEAE','AE'); --> EAEAT
+SELECT RTRIM('EAEATAEAE','EAT'); --> REMOVES FULL STRING
+
+--LPAD()
+SELECT LPAD('NITIN',10,'*'); --> *****NITIN
+SELECT LPAD('SQL',6,'#'); --> ###SQL
+SELECT LPAD('SQL',6); -->    SQL -- BLANK SPACES ADDED TO THE LEFT
+
+--RPAD()
+SELECT LPAD('NITIN',10,'*'); --> NITIN*****
+SELECT LPAD('SQL',6,'#'); --> SQL###
+SELECT LPAD('SQL',6); --> SQL   -- BLANK SPACES ADDED TO THE RIGHT
