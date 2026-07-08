@@ -185,3 +185,390 @@
     -> Use aggregate functions only on required columns.
 
 -------------------------------------------------------------------------------------------------------
+
+
+# 2. Single Row Functions (SRF)
+    -> Single Row Functions operate on one row at a time.
+    -> They accept one input value and return one output value.
+    -> A separate result is returned for every row processed.
+
+## Types of Single Row Functions
+1. Character Functions
+2. Numeric Functions
+3. General Functions
+4. Conversion Functions
+5. Date Functions
+---
+# 2.1 Character Functions
+    -> Character functions are used to manipulate character or string data.
+    -> They return either character values or numeric values.
+## Types of Character Functions
+    1. Case Manipulation
+        UPPER()
+        LOWER()
+        INITCAP()
+    2. Character Manipulation
+        LENGTH()
+        REVERSE()
+        REPLACE()    
+        CONCAT()
+        SUBSTR()
+        INSTR() / POSITION() / STRPOS()
+        TRIM()
+        LTRIM()
+        RTRIM()
+        LPAD()
+        RPAD()
+
+---
+
+## UPPER() Function
+    -> UPPER() converts all alphabetic characters into uppercase.
+### Syntax
+    SELECT UPPER(column_name) FROM table_name;
+### Example
+    SELECT UPPER(ename) FROM emp;
+
+### Important Notes
+    -> Converts lowercase letters into uppercase.
+    -> Non-alphabetic characters remain unchanged.
+    -> Frequently used for case-insensitive comparisons.
+### Interview Point
+    Q. Which function converts a string into uppercase?
+    Ans.
+        -> UPPER()
+---
+
+## LOWER() Function
+    -> LOWER() converts all alphabetic characters into lowercase.
+
+### Syntax
+    SELECT LOWER(column_name) FROM table_name;
+### Example
+    SELECT LOWER(ename) FROM emp;
+
+### Important Notes
+    -> Converts uppercase letters into lowercase.
+    -> Frequently used while storing normalized data.
+### Interview Point
+    Q. Which function converts text into lowercase?
+    Ans.
+        -> LOWER()
+---
+
+## INITCAP() Function
+    -> INITCAP() converts the first letter of every word into uppercase.
+
+### Syntax
+    SELECT INITCAP(column_name) FROM table_name;
+### Example
+    SELECT INITCAP('java backend developer');
+
+### Database Difference
+PostgreSQL
+    INITCAP()
+
+Oracle
+    INITCAP()
+
+MySQL
+    No built-in INITCAP().
+
+### Important Notes
+    -> Used to format names and addresses.
+    -> Capitalizes the first letter of every word.
+### Interview Point
+    Q. Which function capitalizes the first letter of each word?
+    Ans.
+        -> INITCAP()
+---
+
+## LENGTH() Function
+-> LENGTH() returns the number of characters in a string.
+### Syntax
+    SELECT LENGTH(column_name) FROM table_name;
+### Example
+    SELECT ename,LENGTH(ename) FROM emp;
+
+### Important Notes
+    -> Spaces are counted as characters.
+    -> Returns an integer value.
+
+### Interview Point
+    Q. What does LENGTH() return?
+    Ans.
+        -> Number of characters in a string.
+---
+
+## REVERSE() Function
+    -> REVERSE() returns the characters of a string in reverse order.
+### Syntax
+    SELECT REVERSE(string);
+### Example
+    SELECT REVERSE(ename) FROM emp;
+
+### Database Difference
+PostgreSQL
+    REVERSE()
+
+Oracle
+    REVERSE()
+
+MySQL
+    REVERSE()
+
+### Important Notes
+    -> Mainly used for string manipulation.
+    -> Oracle provide a built-in REVERSE() function.
+    -> Returns the reversed string.
+### Interview Point
+    Q. Which function reverses a string?
+    Ans.
+        -> REVERSE()  
+---
+
+## REPLACE() Function
+    -> REPLACE() replaces all occurrences of a specified substring
+       with another substring.
+### Syntax
+    SELECT REPLACE(string,old_value,new_value);
+### Example
+    SELECT REPLACE(job,'SALESMAN','SALES EXECUTIVE') FROM emp;
+
+### Important Notes
+    -> Replaces every occurrence of the specified text.
+    -> Returns the original string if no match is found.
+    -> Case-sensitive in PostgreSQL.
+### Interview Point
+    Q. Which function replaces a substring
+    Ans.
+        -> REPLACE()
+---
+
+## CONCAT() Function
+    -> CONCAT() joins two or more strings into a single string.
+
+### Syntax
+    SELECT CONCAT(string1,string2);
+### Example
+    SELECT CONCAT(ename,job) FROM emp;
+
+### Database Difference
+    PostgreSQL
+        CONCAT() or ||
+
+    Oracle
+        CONCAT() or ||
+
+    MySQL
+        CONCAT()
+
+### Important Notes
+    -> PostgreSQL supports both CONCAT() and ||.
+    -> Oracle supports both CONCAT() and ||.
+    -> MySQL mainly uses CONCAT().
+### Interview Point
+    Q. Which database supports both CONCAT() and || ?
+    Ans.
+        -> PostgreSQL and Oracle
+---
+
+## SUBSTR() Function
+    -> SUBSTR() extracts a part of a string.
+### Syntax
+    SELECT SUBSTR(string,start_position,length);
+### Example
+    SELECT SUBSTR(ename,1,3) FROM emp;
+    SELECT SUBSTR('QSPIDERS',-3,2); -> In PostgreSQL negavtive position not works for this we can use RIGHT() function
+
+    -> Oracle supports negative starting positions in SUBSTR().
+        SELECT SUBSTR('QSPIDERS',-3,2)
+        FROM dual;
+
+    -> PostgreSQL developers generally use RIGHT() when extracting
+    characters from the end of a string.
+        SELECT LEFT(RIGHT('QSPIDERS',3),2);
+
+### Important Notes
+    -> Position starts from 1.
+    -> Length parameter is optional.
+    -> Negative position not works in PostgreSQL.
+    -> In SUBSTR() length will never fetches in negative.
+### Interview Point
+    Q. Which function extracts part of a string?
+    Ans.
+        -> SUBSTR()
+---
+
+## INSTR() / POSITION() Function
+    -> Returns the position of a character or substring within a string.
+
+### Database Difference
+PostgreSQL
+    POSITION()
+    STRPOS()
+
+Oracle
+    INSTR()
+
+MySQL
+    INSTR()
+
+### PostgreSQL Example
+    SELECT POSITION('A' IN ename) FROM emp;
+    SELECT POSITION('ARSHAD,'A') FROM emp;
+### Oracle Example
+    SELECT INSTR(ename,'A') FROM emp;
+
+### Important Notes
+    -> Returns the position of the first occurrence.
+    -> Returns 0 when the substring is not found.
+    -> PostgreSQL commonly uses POSITION() or STRPOS().
+### Interview Point
+    Q. Which function returns the position of a substring?
+    Ans.
+        -> INSTR() in Oracle/MySQL
+        -> POSITION() or STRPOS() in PostgreSQL
+---
+
+## TRIM() Function
+    -> TRIM() removes leading and trailing spaces from a string.
+### Syntax
+    SELECT TRIM(string);
+    SELECT TRIM(char_to_remove FROM string);
+### Example
+    SELECT TRIM('   ARSHAD   ');
+    SELECT TRIM('NI' FROM 'NITIN'); -> 'T'
+        --> Here, 'NI' is a trimset in oracle trimset should be one char but postgre supports it
+        it removes 'N', 'I' from both ends till another character find.
+    SELECT TRIM('NI' FROM 'NITINLMN'); -> TINLM
+### Important Notes
+    -> Removes spaces from both ends.
+    -> Does not remove spaces between words.
+    -> Can also remove specified characters.
+
+### Interview Point
+    Q. Which function removes spaces from both sides?
+    Ans.
+        -> TRIM()
+---
+
+## LTRIM() Function
+    -> LTRIM() removes leading spaces from a string.
+### Syntax
+    SELECT LTRIM(string, char_to_remove);
+### Example
+    SELECT LTRIM('     ARSHAD');
+
+### Important Notes
+    -> Removes spaces from the left side only.
+    -> Right-side spaces remain unchanged.
+### Interview Point
+    Q. Which function removes spaces from the left side?
+    Ans.
+        -> LTRIM()
+---
+
+## RTRIM() Function
+    -> RTRIM() removes trailing spaces from a string.
+
+### Syntax
+    SELECT RTRIM(string, char_to_remove);
+### Example
+    SELECT RTRIM('ARSHAD     ');
+
+### Important Notes
+    -> Removes spaces from the right side only.
+    -> Left-side spaces remain unchanged.
+### Interview Point
+    Q. Which function removes spaces from the right side?
+    Ans.
+        -> RTRIM()
+---
+
+## LPAD() Function
+    -> LPAD() pads characters on the left side of a string.
+    -> It returns a string of the specified length.
+
+### Syntax
+    SELECT LPAD(string,total_length,pad_string);
+
+### Example
+    SELECT LPAD(ename,10,'*')
+    FROM emp;
+### Output
+    *****SMITH
+    *****ALLEN
+
+### Important Notes
+    -> Adds characters to the left.
+    -> If the string exceeds the specified length,
+    it is truncated.
+    -> Frequently used in report formatting.
+### Interview Point
+    Q. Which function pads characters on the left?
+    Ans.
+        -> LPAD()
+---
+
+## RPAD() Function
+    -> RPAD() pads characters on the right side of a string.
+    -> It returns a string of the specified length.
+
+### Syntax
+    SELECT RPAD(string,total_length,pad_string);
+### Example
+    SELECT RPAD(ename,10,'*')
+    FROM emp;
+### Output
+    SMITH*****
+    ALLEN*****
+
+### Important Notes
+    -> Adds characters to the right.
+    -> Commonly used while generating formatted reports.
+    -> If the string exceeds the specified length,
+    it is truncated.
+### Interview Point
+    Q. Which function pads characters on the right?
+    Ans.
+        -> RPAD()
+---
+
+## Character Functions Summary
+    UPPER()      -> Converts text to uppercase.
+    LOWER()      -> Converts text to lowercase.
+    INITCAP()    -> Capitalizes the first letter of every word.
+    LENGTH()     -> Returns the number of characters.
+    REVERSE()    -> Reverses a string.
+    REPLACE()    -> Replaces a substring.
+    CONCAT()     -> Joins two or more strings.
+    SUBSTR()     -> Extracts a part of a string.
+    INSTR()      -> Returns the position of a substring.    
+    TRIM()       -> Removes spaces from both sides.
+    LTRIM()      -> Removes leading spaces.
+    RTRIM()      -> Removes trailing spaces.
+    LPAD()       -> Pads characters on the left.
+    RPAD()       -> Pads characters on the right.
+---
+
+## Most Asked Interview Questions
+    Q. Difference between TRIM(), LTRIM() and RTRIM()?
+    Ans.
+        -> TRIM() removes spaces from both sides.
+        -> LTRIM() removes leading spaces.
+        -> RTRIM() removes trailing spaces.
+    Q. Which function extracts part of a string?
+    Ans.
+        -> SUBSTR()
+    Q. Which function replaces a substring?
+    Ans.
+        -> REPLACE()
+    Q. Difference between CONCAT() and '||'?
+    Ans.
+        -> CONCAT() is a function.
+        -> '||' is the concatenation operator.
+    Q. Which function returns the length of a string?
+    Ans.
+        -> LENGTH()
+---
