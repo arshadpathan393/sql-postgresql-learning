@@ -219,7 +219,17 @@
         RTRIM()
         LPAD()
         RPAD()
-
+        LEFT()
+        RIGHT()
+        SPLIT_PART()
+        TRANSLATE()
+        ASCII()
+        CHR()
+        REPEAT()
+        OVERLAY()
+        REGEXP_REPLACE()
+        REGEXP_MATCHES()
+        STRING_AGG() 
 ---
 
 ## UPPER() Function
@@ -265,14 +275,14 @@
     SELECT INITCAP('java backend developer');
 
 ### Database Difference
-PostgreSQL
-    INITCAP()
+    PostgreSQL
+        INITCAP()
 
-Oracle
-    INITCAP()
+    Oracle
+        INITCAP()
 
-MySQL
-    No built-in INITCAP().
+    MySQL
+        No built-in INITCAP().
 
 ### Important Notes
     -> Used to format names and addresses.
@@ -308,14 +318,14 @@ MySQL
     SELECT REVERSE(ename) FROM emp;
 
 ### Database Difference
-PostgreSQL
-    REVERSE()
+    PostgreSQL
+        REVERSE()
 
-Oracle
-    REVERSE()
+    Oracle
+        REVERSE()
 
-MySQL
-    REVERSE()
+    MySQL
+        REVERSE()
 
 ### Important Notes
     -> Mainly used for string manipulation.
@@ -404,15 +414,15 @@ MySQL
     -> Returns the position of a character or substring within a string.
 
 ### Database Difference
-PostgreSQL
-    POSITION()
-    STRPOS()
+    PostgreSQL
+        POSITION()
+        STRPOS()
 
-Oracle
-    INSTR()
+    Oracle
+        INSTR()
 
-MySQL
-    INSTR()
+    MySQL
+        INSTR()
 
 ### PostgreSQL Example
     SELECT POSITION('A' IN ename) FROM emp;
@@ -486,6 +496,27 @@ MySQL
         -> RTRIM()
 ---
 
+## Most Asked Interview Questions
+    Q. Difference between TRIM(), LTRIM() and RTRIM()?
+    Ans.
+        -> TRIM() removes spaces from both sides.
+        -> LTRIM() removes leading spaces.
+        -> RTRIM() removes trailing spaces.
+    Q. Which function extracts part of a string?
+    Ans.
+        -> SUBSTR()
+    Q. Which function replaces a substring?
+    Ans.
+        -> REPLACE()
+    Q. Difference between CONCAT() and '||'?
+    Ans.
+        -> CONCAT() is a function.
+        -> '||' is the concatenation operator.
+    Q. Which function returns the length of a string?
+    Ans.
+        -> LENGTH()
+---
+
 ## LPAD() Function
     -> LPAD() pads characters on the left side of a string.
     -> It returns a string of the specified length.
@@ -535,40 +566,357 @@ MySQL
         -> RPAD()
 ---
 
-## Character Functions Summary
-    UPPER()      -> Converts text to uppercase.
-    LOWER()      -> Converts text to lowercase.
-    INITCAP()    -> Capitalizes the first letter of every word.
-    LENGTH()     -> Returns the number of characters.
-    REVERSE()    -> Reverses a string.
-    REPLACE()    -> Replaces a substring.
-    CONCAT()     -> Joins two or more strings.
-    SUBSTR()     -> Extracts a part of a string.
-    INSTR()      -> Returns the position of a substring.    
-    TRIM()       -> Removes spaces from both sides.
-    LTRIM()      -> Removes leading spaces.
-    RTRIM()      -> Removes trailing spaces.
-    LPAD()       -> Pads characters on the left.
-    RPAD()       -> Pads characters on the right.
+## LEFT() Function
+    -> LEFT() returns the specified number of characters from the left side of a string.
+### Syntax
+    SELECT LEFT(string,number_of_characters);
+### Example
+    SELECT LEFT(ename,3) FROM emp;
+
+### Database Difference
+    PostgreSQL
+        LEFT()
+
+    Oracle
+        SUBSTR(string,1,n)
+
+    MySQL
+    LEFT()
+
+### Important Notes
+    -> Returns characters from the beginning of the string.
+    -> PostgreSQL and MySQL support LEFT() directly.
+    -> Oracle uses SUBSTR() for the same functionality.
+### Interview Point
+    Q. What is the Oracle equivalent of LEFT()?
+    Ans.
+        -> SUBSTR(string,1,n)
 ---
 
-## Most Asked Interview Questions
-    Q. Difference between TRIM(), LTRIM() and RTRIM()?
+## RIGHT() Function
+    -> RIGHT() returns the specified number of characters from the right
+    side of a string.
+
+### Syntax
+    SELECT RIGHT(string,number_of_characters);
+### Example
+    SELECT RIGHT(ename,2) FROM emp;
+
+### Database Difference
+    PostgreSQL
+        RIGHT()
+
+    Oracle
+        SUBSTR(string,-n)
+
+    MySQL
+        RIGHT()
+
+### Important Notes
+    -> Returns characters from the end of the string.
+    -> Oracle uses SUBSTR() with a negative starting position.
+
+### Interview Point
+    Q. What is the Oracle equivalent of RIGHT()?
     Ans.
-        -> TRIM() removes spaces from both sides.
-        -> LTRIM() removes leading spaces.
-        -> RTRIM() removes trailing spaces.
-    Q. Which function extracts part of a string?
+        -> SUBSTR(string,-n)
+
+---
+
+## SPLIT_PART() Function
+    -> SPLIT_PART() splits a string using a specified delimiter.
+    -> It returns the requested part of the string.
+    -> PostgreSQL provides this function.
+### Syntax
+    SELECT SPLIT_PART(string,delimiter,position);
+### Example
+    SELECT SPLIT_PART('Java,SQL,Spring',',',2);
+    SELECT SPLIT_PART('arshad@gmail.com','@',1);
+
+### Database Difference
+    PostgreSQL
+        SPLIT_PART()
+
+    Oracle
+        REGEXP_SUBSTR()
+
+    MySQL
+        SUBSTRING_INDEX()
+
+### Important Notes
+    -> Position starts from 1.
+    -> Returns an empty string if the position
+    does not exist.
+    -> Frequently used while processing CSV data.
+### Interview Point
+    Q. Which PostgreSQL function splits a string using a delimiter?
     Ans.
-        -> SUBSTR()
-    Q. Which function replaces a substring?
+        -> SPLIT_PART()
+---
+
+## TRANSLATE() Function
+    -> TRANSLATE() replaces individual characters in a string.
+    -> Each character is replaced based on its position.
+### Syntax
+    SELECT TRANSLATE(string,from_characters,to_characters);
+### Example
+    SELECT TRANSLATE('QSPIDERS','QS','AB');
+
+### Database Difference
+    PostgreSQL
+        TRANSLATE()
+
+    Oracle
+        TRANSLATE()
+
+    MySQL
+        No direct equivalent.
+
+### Important Notes
+    -> Replaces characters, not words.
+    -> Different from REPLACE().
+    -> Useful for character mapping.
+### Interview Point
+    Q. Difference between TRANSLATE() and REPLACE()?
     Ans.
-        -> REPLACE()
-    Q. Difference between CONCAT() and '||'?
+        -> TRANSLATE() replaces characters.
+        -> REPLACE() replaces substrings.
+---
+
+## ASCII() Function
+    -> ASCII() returns the ASCII value of the first character.
+### Syntax
+    SELECT ASCII(character);
+### Example
+    SELECT ASCII('A');
+    SELECT ASCII('a');
+
+### Important Notes
+    -> Returns the ASCII value of only the first character.
+    -> Commonly asked in interviews.
+    -> Works with character data.
+### Interview Point
+    Q. What is the ASCII value of 'A'?
     Ans.
-        -> CONCAT() is a function.
-        -> '||' is the concatenation operator.
-    Q. Which function returns the length of a string?
+        -> 65
+---
+
+## CHR() Function
+    -> CHR() returns the character represented by an ASCII value.
+### Syntax
+    SELECT CHR(ascii_value);
+### Example
+    SELECT CHR(65);
+    SELECT CHR(97);
+
+### Important Notes
+    -> Opposite of ASCII().
+    -> Converts an ASCII value into a character.
+    -> Useful while generating special characters.
+### Interview Point
+    Q. Which function is opposite of ASCII()?
     Ans.
-        -> LENGTH()
+        -> CHR()
+---
+
+## REPEAT() Function
+    -> REPEAT() repeats a string the specified number of times.
+    -> It returns a new string containing repeated copies.
+### Syntax
+    SELECT REPEAT(string,number_of_times);
+### Example
+    SELECT REPEAT('SQL',3);
+    SELECT REPEAT('*',10);
+
+### Database Difference
+    PostgreSQL
+        REPEAT()
+
+    Oracle
+        RPAD()
+
+    MySQL
+        REPEAT()
+
+### Oracle Equivalent
+    SELECT RPAD('SQL',9,'SQL')
+    FROM dual;
+
+### Important Notes
+    -> Repeats the complete string.
+    -> Frequently used while generating sample data.
+    -> Useful for formatting reports.
+### Interview Point
+    Q. Which function repeats a string multiple times?
+    Ans.
+        -> REPEAT()
+---
+
+## OVERLAY() Function
+    -> OVERLAY() replaces a portion of a string with another string.
+    -> PostgreSQL provides this function.
+### Syntax
+    SELECT OVERLAY(string PLACING new_string FROM start_position FOR length);                
+### Example
+    SELECT OVERLAY('QSPIDERS' PLACING 'JAVA' FROM 3 FOR 4);
+    SELECT OVERLAY('PostgreSQL' PLACING 'Java' FROM 1 FOR 4);
+
+### Database Difference
+    PostgreSQL
+        OVERLAY()
+
+    Oracle
+        No direct equivalent.
+
+    MySQL
+        No direct equivalent.
+
+### Important Notes
+    -> Replaces characters at a specified position.
+    -> PostgreSQL-specific function.
+    -> Similar to combining SUBSTR() and CONCAT().
+### Interview Point
+    Q. Which PostgreSQL function replaces part of a string at a specified position?
+    Ans.
+        -> OVERLAY()
+---
+
+## REGEXP_REPLACE() Function
+    -> REGEXP_REPLACE() replaces text that matches a regular expression.
+    -> It is commonly used for data cleaning and validation.
+### Syntax
+    SELECT REGEXP_REPLACE(string, pattern, replacement, flags);
+### Example
+    SELECT REGEXP_REPLACE('987-654-3210','[^0-9]','','g');
+    SELECT REGEXP_REPLACE('Java123SQL456','[0-9]','','g');
+
+### Database Difference
+    PostgreSQL
+        REGEXP_REPLACE()
+
+    Oracle
+        REGEXP_REPLACE()
+
+    MySQL
+        REGEXP_REPLACE()
+        (MySQL 8.0+)
+
+### Important Notes
+    -> Uses regular expressions for pattern matching.
+    -> 'g' replaces all matching occurrences.
+    -> Frequently used for cleaning imported data.
+### Interview Point
+    Q. Which function replaces text using regular expressions?
+    Ans.
+        -> REGEXP_REPLACE()
+---
+
+## REGEXP_MATCHES() Function
+    -> REGEXP_MATCHES() returns text matching a regular expression.
+    -> PostgreSQL supports this function.
+### Syntax
+    SELECT REGEXP_MATCHES(string,pattern);
+### Example
+    SELECT REGEXP_MATCHES('Java SQL Spring', 'SQL');
+    SELECT REGEXP_MATCHES('abc123xyz', '[0-9]+');
+
+### Database Difference
+    PostgreSQL
+        REGEXP_MATCHES()
+
+    Oracle
+        REGEXP_SUBSTR()
+
+    MySQL
+        REGEXP_SUBSTR()
+        (MySQL 8.0+)
+
+### Important Notes
+    -> Returns matching text.
+    -> Supports powerful pattern matching.
+    -> Frequently used in validations.
+
+### Interview Point
+    Q. Which PostgreSQL function returns text matching a regular expression?
+    Ans.
+        -> REGEXP_MATCHES()
+---
+
+## STRING_AGG() Function
+    -> STRING_AGG() combines values from multiple rows into a single string.
+    -> It is an aggregate function.
+
+### Syntax
+    SELECT STRING_AGG(column_name,separator) FROM table_name;
+### Example
+    SELECT STRING_AGG(ename,', ') FROM emp;
+    SELECT deptno,STRING_AGG(ename,', ') FROM emp GROUP BY deptno;
+
+### Database Difference
+    PostgreSQL
+        STRING_AGG()
+
+    Oracle
+        LISTAGG()
+
+    MySQL
+        GROUP_CONCAT()
+
+### Important Notes
+    -> Aggregate function.
+    -> Concatenates values from multiple rows.
+    -> Separator can be any character or string.
+    -> Frequently used in reports.
+
+### Interview Point
+    Q. Which PostgreSQL aggregate function combines
+    multiple rows into one string?
+    Ans.
+        -> STRING_AGG()
+    Q. What is the Oracle equivalent of STRING_AGG()?
+    Ans.
+        -> LISTAGG()
+    Q. What is the MySQL equivalent of STRING_AGG()?
+    Ans.
+        -> GROUP_CONCAT()
+---
+
+## Summary
+    REGEXP_REPLACE()
+        -> Replaces text using regular expressions.
+
+    REGEXP_MATCHES()
+        -> Returns text matching a regular expression.
+
+    STRING_AGG()
+        -> Combines multiple row values into a single string.
+---
+
+## Character Functions Summary
+    UPPER()             -> Converts text to uppercase.
+    LOWER()             -> Converts text to lowercase.
+    INITCAP()           -> Capitalizes the first letter of every word.
+    LENGTH()            -> Returns the number of characters.
+    REVERSE()           -> Reverses a string.
+    REPLACE()           -> Replaces a substring.
+    CONCAT()            -> Joins two or more strings.
+    SUBSTR()            -> Extracts a part of a string.
+    INSTR()             -> Returns the position of a substring.    
+    TRIM()              -> Removes spaces from both sides.
+    LTRIM()             -> Removes leading spaces.
+    RTRIM()             -> Removes trailing spaces.
+    LPAD()              -> Pads characters on the left.
+    RPAD()              -> Pads characters on the right.
+    LEFT()              -> Extracts a part of a string from left side.   
+    RIGHT()             -> Extracts a part of a string from right side.
+    SPLIT_PART()        -> Splits a string using a specified delimiter.
+    TRANSLATE()         -> Replaces individual characters in a string.
+    ASCII()             -> Converts Character value into ASCII value.
+    CHR()               -> Converts ASCII value into Character value.
+    REPEAT()            -> Repeats a string the specified number of times.
+    OVERLAY()           -> Replaces a portion of a string with another string.
+    REGEXP_REPLACE()    -> Replaces text using regular expressions.
+    REGEXP_MATCHES()    -> Returns text matching a regular expression.
+    STRING_AGG()        -> Combines multiple row values into a single string.
+
 ---
