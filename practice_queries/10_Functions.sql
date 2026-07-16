@@ -681,3 +681,244 @@ SELECT deptno,STRING_AGG(ename,' | ') FROM emp1 GROUP BY deptno;
 --Display employee names without vowels.
 --Display employee names with alternate letters in uppercase.
 --Display employee names with every space replaced by _.
+
+----------------------------------------------------------------------------------------------
+1.-- NUMERIC/NUMBER FUNCTIONS
+a.-- CEIL()
+SELECT CEIL(12.99); -> 13
+SELECT CEIL(13.50); -> 14
+SELECT CEIL(14.01); -> 15
+SELECT CEIL(15.00); -> 15
+SELECT CEIL(-123.34); -> -123
+
+b.-- FLOOR()
+SELECT FLOOR(12.99); -> 12
+SELECT FLOOR(13.50); -> 13
+SELECT FLOOR(14.01); -> 14
+SELECT FLOOR(15.00); -> 15
+SELECT FLOOR(-123.34); -> -124
+
+c.-- ROUND()
+SELECT ROUND(123.34); -> 123
+SELECT ROUND(123.345,2); -> 123.35
+SELECT ROUND(123.345,1); -> 123.3
+SELECT ROUND(123.543,0); -> 124 
+SELECT ROUND(123.543,-1); -> 120
+SELECT ROUND(123.543,-2); -> 100
+SELECT ROUND(555.555,-3); -> 1000
+
+d.-- POWER()
+SELECT POWER(2,5); -> 32
+SELECT POWER(-2,5); -> -32
+SELECT POWER(-2,4); -> 16
+SELECT POWER(2.5,5); -> 97.65625
+SELECT POWER(2.3,3.5); -> 18.452169105555043
+SELECT POWER(8,0); -> 1
+
+e.-- MOD()
+SELECT MOD(25,4); -> 1
+SELECT MOD(27,6); -> 3
+SELECT MOD(-27,6); -> -3
+SELECT MOD(-27,-6); -> -3
+SELECT MOD(-27.4,-6); -3.4
+
+e.-- SQRT()
+SELECT SQRT(144); -> 12
+SELECT SQRT(-144); --> ERROR:  cannot take square root of a negative number 
+
+f.-- ABS()
+SELECT ABS(-250); -> 250
+SELECT ABS(-10); -> 10
+SELECT ABS(-000.10); -> 0.10 
+
+h.-- TRUNC()
+SELECT TRUNC(123.34); -> 123
+SELECT TRUNC(123.345,2); -> 123.34
+SELECT TRUNC(123.345,1); -> 123.3
+SELECT TRUNC(123.543,0); -> 123 
+SELECT TRUNC(123.543,-1); -> 120
+SELECT TRUNC(123.543,-2); -> 100
+SELECT TRUNC(555.555,-3); -> 0
+
+i.-- RANDOM()
+SELECT RANDOM();
+----------------------------------------------------------------------------------------------
+
+--QUERIES
+
+--CEIL()
+--Find the ceiling value of 12.34.
+SELECT CEIL(12.34); -> 13
+--Find the ceiling value of -12.34.
+SELECT CEIL(-12.34); -> 12 
+--Find the ceiling value of 15.99.
+SELECT CEIL(15.99); -> 16
+--Display employee salary after applying CEIL(sal/12).
+SELECT empno, ename, CEIL(sal/12) FROM emp1; 
+--Find monthly salary rounded up to the nearest integer.
+SELECT empno, ename, sal, CEIL(sal) AS rounded_sal FROM emp1; 
+--Display commission rounded up.
+SELECT empno, ename, comm, CEIL(comm) FROM emp1; 
+
+--FLOOR()
+--Find the floor value of 12.99.
+SELECT FLOOR(12.99); -> 12
+--Find the floor value of -12.99.
+SELECT FLOOR(-12.99); -> 13
+--Find the floor value of 15.01.
+SELECT FLOOR(15.01); -> 15
+--Display monthly salary rounded down.
+SELECT empno, ename, sal, FLOOR(sal) FROM emp1;
+--Display commission rounded down.
+SELECT empno, ename, comm, FLOOR(comm) FROM emp1;
+--Compare CEIL() and FLOOR() on employee salaries.
+SELECT empno, ename, sal, CEIL(sal) AS ceil_sal, FLOOR(sal) AS floor_sal FROM emp1;
+
+--POWER()
+--Find 2³.
+SELECT POWER(2,3); -> 8
+--Find 5⁴.
+SELECT POWER(5,4); -> 625
+--Find 10².
+SELECT POWER(10,2); -> 100
+--Display square of employee salary.
+SELECT empno,ename,sal, POWER(sal,2) AS sq_sal FROM emp1;
+--Display cube of commission.
+SELECT empno,ename,comm, POWER(comm,2) AS cube_comm FROM emp1;
+--Display salary raised to power 2.
+SELECT empno,ename,sal, POWER(sal,2) AS sq_sal FROM emp1;
+
+--MOD()
+--Find remainder of 15 ÷ 4.
+SELECT MOD(15,4); -> 3
+--Find remainder of 100 ÷ 9.
+SELECT MOD(100,9) -> 1
+--Display employees whose employee number is even.
+SELECT empno,ename FROM emp1
+WHERE MOD(empno,2) = 0;
+--Display employees whose employee number is odd.
+SELECT empno,ename FROM emp1
+WHERE MOD(empno,2) <> 0;
+--Display employees whose salary is divisible by 100.
+SELECT empno,ename,sal FROM emp1
+WHERE MOD(sal,100) = 0;
+--Find employees whose department number is even.
+SELECT empno,ename,deptno FROM emp1
+WHERE MOD(deptno,2) = 0;
+--Display salaries whose remainder after division by 500 is zero.
+SELECT empno,ename,sal FROM emp1
+WHERE MOD(sal,500) = 0;
+
+--SQRT()
+--Find square root of 144.
+SELECT SQRT(144); -> 12
+--Find square root of 625.
+SELECT SQRT(625); -> 25
+--Find square root of employee salary.
+SELECT empno,ename,sal,SQRT(sal) sal_sqrt FROM emp1;
+--Find square root of annual salary.
+SELECT empno,ename,sal,SQRT(sal*12) ann_sal_sqrt FROM emp1;
+--Display square root of commission.
+SELECT empno,ename,comm,SQRT(comm) comm_sqrt FROM emp1;
+
+--ABS()
+--Find absolute value of -100.
+SELECT ABS(-100); -> 100
+--Find absolute value of 100.
+SELECT ABS(-100); -> 100
+--Find difference between employee salary and 3000 using ABS().
+SELECT empno,ename,sal,ABS(sal-3000) AS diff FROM emp1;
+--Display absolute commission values.
+SELECT empno,ename,comm,ABS(comm) AS abs_comm FROM emp1;
+--Display difference between highest and lowest salary using ABS().
+SELECT MAX(ABS(SAL))-MIN(ABS(SAL)) AS diff FROM emp1;
+
+--ROUND()
+--Round 123.45.
+SELECT ROUND(123.45); -> 123
+--Round 123.55.
+SELECT ROUND(123.55); -> 124
+--Round 123.456 to 2 decimal places.
+SELECT ROUND(123.456,2); -> 123.46
+--Round 123.456 to 1 decimal place.
+SELECT ROUND(123.456,1); -> 123.5
+--Round 123.456 to 0 decimal places.
+SELECT ROUND(123.456,0); -> 123
+--Round 123.456 to -1.
+SELECT ROUND(123.456,-1); -> 120
+--Round 123.456 to -2.
+SELECT ROUND(123.456,-2); -> 100
+--Round employee salary to nearest hundred.
+SELECT empno,ename,sal,ROUND(sal,-2) FROM emp1;
+--Round employee salary to nearest thousand.
+SELECT empno,ename,sal,ROUND(sal,-3) FROM emp1;
+--Round average salary to two decimal places.
+SELECT ROUND(AVG(sal),2) AS average_salary FROM emp1;
+--Display rounded monthly salary.
+SELECT ROUND(sal) AS rounded_salary FROM emp1;
+
+--TRUNC()
+--Truncate 123.456.
+SELECT TRUNC(123.456); -> 123
+--Truncate 123.456 to 2 decimal places.
+SELECT TRUNC(123.456,2); -> 123.45
+--Truncate 123.456 to 1 decimal place.
+SELECT TRUNC(123.456,1); -> 123.4
+--Truncate 123.456 to 0 decimal places.
+SELECT TRUNC(123.456,0); -> 123
+--Truncate 123.456 to -1.
+SELECT TRUNC(123.456,-1); -> 120
+--Truncate employee salary to nearest hundred.
+SELECT TRUNC(sal,-2) FROM emp1;
+--Display truncated commission.
+SELECT TRUNC(comm) FROM emp1;
+--Compare ROUND() and TRUNC() using employee salary.
+SELECT sal,ROUND(sal) AS rounded_sal,TRUNC(sal) AS trunc_sal FROM emp1;
+
+--Mixed Numeric Function Questions
+--Display employee salary and its square.
+SELECT sal, POWER(sal,2) as sq_sal FROM emp1;
+--Display employee salary and square root.
+SELECT sal, SQRT(sal) as sqroot_sal FROM emp1;
+--Display employee salary rounded to nearest hundred.
+SELECT sal, ROUND(sal,-2) as rounded_sal FROM emp1;
+--Display employee salary truncated to nearest hundred.
+SELECT sal, TRUNC(sal,-2) as truncated_sal FROM emp1;
+--Display annual salary rounded to nearest thousand.
+SELECT sal, ROUND(sal*12,-3) as round_ann_sal FROM emp1;
+--Display annual salary truncated to nearest thousand.
+SELECT sal, TRUNC(sal*12,-3) as trunc_ann_sal FROM emp1;
+--Find employees whose salary is an even number.
+SELECT empno,ename,sal FROM emp1
+WHERE MOD(sal,2)=0;
+--Find employees whose salary is an odd number.
+SELECT empno,ename,sal FROM emp1
+WHERE MOD(sal,2)<>0;
+--Display monthly salary rounded up.
+SELECT empno,sal,CEIL(sal) FROM emp1;
+--Display monthly salary rounded down.
+SELECT empno,sal,FLOOR(sal) FROM emp1;
+--Display salary difference from 5000 using ABS().
+SELECT empno,sal,ABS(sal-5000) AS abs_diff FROM emp1;
+--Display salary raised to power 3.
+SELECT empno,sal,POWER(sal,3) FROM emp1;
+--Display square root of annual salary.
+SELECT empno,sal,sqrt(sal*12) FROM emp1;
+--Display salary after dividing by 12 and applying ROUND().
+SELECT empno,sal,ROUND(sal/12) FROM emp1;
+--Display salary after dividing by 12 and applying TRUNC().
+SELECT empno,sal,TRUNC(sal/12) FROM emp1;
+--Display salary after dividing by 12 and applying CEIL().
+SELECT empno,sal,CEIL(sal/12) FROM emp1;
+--Display salary after dividing by 12 and applying FLOOR().
+SELECT empno,sal,FLOOR(sal/12) FROM emp1;
+
+--PostgreSQL-Specific Numeric Functions
+--RANDOM()
+--Generate a random number.
+SELECT RANDOM();
+--Generate a random integer between 1 and 100.
+SELECT RANDOM(1,100);
+--Select a random employee.
+SELECT empno, ename, sal FROM emp1 
+ORDER BY RANDOM() LIMIT 1;
