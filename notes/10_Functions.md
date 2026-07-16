@@ -920,3 +920,238 @@
     STRING_AGG()        -> Combines multiple row values into a single string.
 
 ---
+# 2.2 Numeric Functions
+    -> Numeric functions are used to perform mathematical operations on
+       numeric values.
+    -> They accept numeric input and return a numeric result.
+## Types of Numeric Functions
+    CEIL()
+    FLOOR()
+    ROUND()
+    MOD()
+    ABS()
+    POWER()
+    SQRT()
+    TRUNC()
+    RANDOM()
+
+---
+
+## CEIL() Function
+    -> CEIL() returns the smallest integer greater than or equal to the
+       given number.
+### Syntax
+    SELECT CEIL(number);
+### Example
+    SELECT CEIL(15.2); -> 16
+
+### Important Notes
+    -> Always rounds upward.
+    -> Returns an integer value.
+
+### Interview Point
+    Q. Which function always rounds upward?
+    Ans.
+        -> CEIL()
+---
+
+## FLOOR() Function
+    -> FLOOR() returns the largest integer less than or equal to the
+       given number.
+### Syntax
+    SELECT FLOOR(number);
+### Example
+    SELECT FLOOR(15.9); -> 15
+
+### Important Notes
+    -> Always rounds downward.
+    -> Returns an integer value.
+### Interview Point
+    Q. Which function always rounds downward?
+    Ans.
+        -> FLOOR()
+---
+
+## ROUND() Function
+    -> ROUND() rounds a number to the specified decimal places.
+### Syntax
+    SELECT ROUND(number,decimal_places);
+### Example
+    SELECT ROUND(125.567,2); -> 125.57
+    SELECT ROUND(125.567); -> 126
+
+### Important Notes
+    -> Positive decimal places round digits after the decimal point.
+    -> Zero rounds to the nearest integer.
+    -> Negative decimal places round digits before the decimal point.
+### Interview Point
+    Q. Which function rounds a numeric value?
+    Ans.
+        -> ROUND()
+---
+
+## POWER() Function
+    -> POWER() returns a number raised to a specified power.
+
+### Syntax
+    SELECT POWER(base,exponent);
+### Example
+    SELECT POWER(2,5); -> 32
+
+### Important Notes
+    -> Used in mathematical calculations.
+    -> Accepts two numeric arguments.
+### Interview Point
+    Q. Which function calculates exponentiation?
+    Ans.
+        -> POWER()
+---
+
+## MOD() Function
+    -> MOD() returns the remainder after division.
+### Syntax
+    SELECT MOD(number1,number2);
+### Example
+    SELECT MOD(25,4); -> 1
+
+### Database Difference
+PostgreSQL
+    MOD(25,4)
+    25 % 4
+
+Oracle
+    MOD(25,4)
+
+MySQL
+    MOD(25,4)
+    25 % 4
+
+### Important Notes
+    -> Returns the remainder after division.
+    -> Frequently used to determine even and odd numbers.
+### Interview Point
+    Q. Which function returns the remainder?
+    Ans.
+        -> MOD()
+---
+
+## SQRT() Function
+    -> SQRT() returns the square root of a number.
+
+### Syntax
+    SELECT SQRT(number);
+### Example
+    SELECT SQRT(144); -> 12
+
+### Important Notes
+    -> Returns the square root of a positive number.
+    -> Negative numbers produce an error in most databases.
+### Interview Point
+    Q. Which function returns the square root?
+    Ans.
+        -> SQRT()
+---
+
+## ABS() Function
+    -> ABS() returns the absolute (positive) value of a number.
+
+### Syntax
+    SELECT ABS(number);
+### Example
+    SELECT ABS(-250); -> 250
+
+### Important Notes
+    -> Removes the negative sign.
+    -> Positive numbers remain unchanged.
+### Interview Point
+    Q. Which function returns the absolute value?
+    Ans.
+        -> ABS()
+---
+
+## TRUNC() Function
+    -> TRUNC() removes the decimal portion of a number without rounding.
+### Syntax
+    SELECT TRUNC(number,decimal_places);
+### Example
+    SELECT TRUNC(125.567,2); -> 125.56
+    SELECT TRUNC(125.567); -> 125
+
+### Database Difference
+PostgreSQL
+    TRUNC()
+
+Oracle
+    TRUNC()
+
+MySQL
+    TRUNCATE(number,decimal_places)
+
+### Important Notes
+-> Removes decimal digits without rounding.
+-> Positive decimal places keep digits after the decimal point.
+-> Zero removes all decimal digits.
+-> Negative decimal places remove digits before the decimal point.
+### Interview Point
+    Q. What is the difference between ROUND() and TRUNC()?
+    Ans.
+        -> ROUND() rounds the number.
+        -> TRUNC() simply removes the decimal digits without rounding.
+---
+
+## RANDOM() Function
+    -> RANDOM() generates a random number.
+
+### Syntax
+    SELECT RANDOM();
+### Example
+    SELECT RANDOM();
+
+### Database Difference
+    PostgreSQL
+        RANDOM()
+
+    Oracle
+        DBMS_RANDOM.VALUE
+
+    MySQL
+        RAND()
+
+### Important Notes
+    -> PostgreSQL returns a value between 0 and 1.
+    -> Commonly used for testing and sample data generation.
+    -> Every execution produces a different value.
+### Interview Point
+    Q. Which PostgreSQL function generates a random number?
+    Ans.
+        -> RANDOM()
+
+---
+
+## Numeric Functions Summary
+    ROUND()    -> Rounds a number.
+    CEIL()     -> Rounds upward.
+    FLOOR()    -> Rounds downward.
+    MOD()      -> Returns remainder.
+    ABS()      -> Returns absolute value.
+    POWER()    -> Calculates exponentiation.
+    SQRT()     -> Returns square root.
+    TRUNC()    -> Truncates the decimal portion without rounding.
+    RANDOM()   -> Generates random number between 0 and 1.
+---
+
+## Most Asked Interview Questions
+    Q. Difference between CEIL() and FLOOR()?
+    Ans.
+        -> CEIL() rounds upward.
+        -> FLOOR() rounds downward.
+    Q. Which function returns the remainder?
+    Ans.
+        -> MOD()
+    Q. Which function removes the negative sign?
+    Ans.
+        -> ABS()
+    Q. Which function returns the square root?
+    Ans.
+        -> SQRT()
+---
