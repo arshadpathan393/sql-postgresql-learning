@@ -1338,3 +1338,115 @@ Ans.
     Ans.
         -> NULL
 ---
+
+# 2.4 Conversion Functions
+    -> Conversion functions are used to convert data from one datatype
+    to another.
+    -> They improve compatibility between different datatypes.
+
+## Types of Conversion Functions
+    CAST()
+    TO_CHAR()
+    TO_DATE()
+    TO_NUMBER()
+---
+
+## CAST() Function
+    -> CAST() converts a value from one datatype to another.
+    -> It is an ANSI SQL standard function.
+### Syntax
+    SELECT CAST(expression AS datatype);
+### Example
+    SELECT CAST('100' AS INTEGER);
+    SELECT CAST(125.75 AS INTEGER);
+
+### Important Notes
+    -> Supported by PostgreSQL, Oracle and MySQL.
+    -> Frequently used for explicit datatype conversion.
+    -> Improves query readability.
+### Interview Point
+    Q. Which function is the ANSI SQL standard for datatype conversion?
+    Ans.
+        -> CAST()
+---
+
+## TO_CHAR() Function
+    -> TO_CHAR() converts numbers or dates into character strings.
+
+### Syntax
+    SELECT TO_CHAR(expression,format);
+### Example
+    SELECT TO_CHAR(CURRENT_DATE,'DD-MM-YYYY');
+    SELECT TO_CHAR(1250.50,'9999.99');
+
+### Important Notes
+    -> Commonly used for formatting dates.
+    -> Can also format numeric values.
+    -> Frequently used in reports.
+### Interview Point
+    Q. Which function converts DATE into VARCHAR?
+    Ans.
+        -> TO_CHAR()
+---
+
+## TO_DATE() Function
+    -> TO_DATE() converts a character string into a DATE value.
+### Syntax
+    SELECT TO_DATE(string,format);
+### Example
+    SELECT TO_DATE('06-07-2026','DD-MM-YYYY');
+
+### Important Notes
+    -> Input format must match the format string.
+    -> Invalid formats generate an error.
+### Interview Point
+    Q. Which function converts VARCHAR into DATE?
+    Ans.
+        -> TO_DATE()
+--- 
+
+## TO_NUMBER() Function
+    -> TO_NUMBER() converts character data into numeric values.
+### Syntax
+    SELECT TO_NUMBER(string);
+### Example
+    SELECT TO_NUMBER('1250','9999');
+    SELECT TO_NUMBER('12345.75','99999.99');
+
+### Important Notes
+    -> String must contain a valid numeric value.
+    -> Invalid numeric strings generate an error.
+### Interview Point
+    Q. Which function converts VARCHAR into NUMBER?
+    Ans.
+        -> TO_NUMBER()
+---
+
+## Conversion Functions Summary
+    CAST()        -> Converts one datatype into another.
+    TO_CHAR()     -> Converts DATE or NUMBER into VARCHAR.
+    TO_DATE()     -> Converts VARCHAR into DATE.
+    TO_NUMBER()   -> Converts VARCHAR into NUMBER.
+---
+
+## Most Asked Interview Questions
+    Q. What are Conversion Functions?
+    Ans.
+        -> Functions used to convert one datatype into another.
+    
+    Q. Which conversion function is ANSI SQL standard?
+    Ans.
+        -> CAST()
+    
+    Q. Which function converts DATE into VARCHAR?
+    Ans.
+        -> TO_CHAR()
+    
+    Q. Which function converts VARCHAR into DATE?
+    Ans.
+        -> TO_DATE()
+    
+    Q. Which function converts VARCHAR into NUMBER?
+    Ans.
+        -> TO_NUMBER()
+---
