@@ -287,7 +287,6 @@ SELECT REGEXP_MATCHES('abc123xyz', '[0-9]+');-->{123}
 --STRING_AGG()
 SELECT STRING_AGG(ename,', ') FROM emp;
 SELECT deptno,STRING_AGG(ename,', ') FROM emp GROUP BY deptno;
-------------------------------------------------------------------------------------------------------------------------
 
 --QUERIES
 
@@ -683,7 +682,7 @@ SELECT deptno,STRING_AGG(ename,' | ') FROM emp1 GROUP BY deptno;
 --Display employee names with every space replaced by _.
 
 ----------------------------------------------------------------------------------------------
-1.-- NUMERIC/NUMBER FUNCTIONS
+2.-- NUMERIC/NUMBER FUNCTIONS
 a.-- CEIL()
 SELECT CEIL(12.99); -> 13
 SELECT CEIL(13.50); -> 14
@@ -742,7 +741,6 @@ SELECT TRUNC(555.555,-3); -> 0
 
 i.-- RANDOM()
 SELECT RANDOM();
-----------------------------------------------------------------------------------------------
 
 --QUERIES
 
@@ -922,3 +920,177 @@ SELECT RANDOM(1,100);
 --Select a random employee.
 SELECT empno, ename, sal FROM emp1 
 ORDER BY RANDOM() LIMIT 1;
+----------------------------------------------------------------------------------------------
+3.-- GENERAL FUNCTIONS
+a.-- NVL()
+SELECT NVL(comm,0) FROM emp;
+b.-- NVL2()
+SELECT NVL2(comm,'Has Commission','No Commission') FROM emp;
+c.-- DECODE()
+SELECT DECODE(deptno,10,'ACCOUNTING',20,'RESEARCH',30,'SALES','OTHERS') FROM emp;
+d.-- NULLIF()
+SELECT NULLIF(100,100);
+SELECT NULLIF(100,50);
+e.-- COALESCE()
+SELECT COALESCE(NULL,NULL,NULL,100,50); -->100
+SELECT COALESCE(NULL,NULL,NULL,100,NULL); -->100
+SELECT ename,COALESCE(comm,0) FROM emp;
+
+--QUERIES
+
+--NVL() (Oracle)
+--Display employee salary, replacing NULL commission with 0.
+SELECT empno,ename,sal,NVL(comm,0) FROM emp1;
+--Display total salary (SAL + COMM) by replacing NULL commission with 0.
+SELECT empno,ename,sal+NVL(comm,0) AS total_sal FROM emp1;
+--Display annual salary by treating NULL commission as 0.
+SELECT empno,ename,(sal+NVL(comm,0))*12 AS total_ann_sal FROM emp1;
+--Display manager number, replacing NULL with 0.
+SELECT empno,ename,NVL(mgr,0) FROM emp1;
+--Display employee name and commission, showing 'No Commission' when commission is NULL.
+SELECT empno,ename,NVL(TO_CHAR(comm),'NO COMMISSION') FROM emp1;
+OR
+SELECT empno,ename,COALESCE(CAST(comm AS TEXT),'NO COMMISSION') FROM emp1; -->FOR POSTGRESQL
+
+--NVL2() (Oracle)
+--Display "Commission Available" if COMM is not NULL; otherwise "No Commission".
+SELECT empno,ename,NVL2(comm,'Commission Available','No Commission') FROM emp1;
+OR 
+SELECT empno,ename,
+	CASE
+	WHEN comm IS NOT NULL THEN 'Commission Available'
+	ELSE 'No Commission'
+	END
+FROM emp1; --> FOR POSTGRESQL
+--Display commission if available; otherwise display salary.
+SELECT empno,ename,NVL2(comm,comm,sal) FROM emp1;
+OR 
+SELECT empno,ename,COALESCE(comm,sal) FROM emp1; --> FOR POSTGRESQL
+--Display employee bonus:- COMM exists → COMM × 2 - COMM NULL → 500
+SELECT empno,ename,NVL2(comm,comm*2,500) FROM emp1;
+OR 
+SELECT empno,ename,
+	CASE
+	WHEN comm IS NOT NULL THEN comm*2
+	ELSE 500
+	END
+FROM emp1; --> FOR POSTGRESQL
+OR 
+SELECT empno,ename,
+	CASE
+	WHEN comm IS NULL OR comm=0.00 THEN 500
+	ELSE comm*2
+	END
+FROM emp1; --> FOR POSTRGRESQL HERE, IF ANY EMP COMMISSION IS ZERO 
+--Display manager number if available; otherwise display 'No Manager'.
+SELECT empno,ename,NVL2(mgr,mgr,'No Manager') FROM EMP1;
+OR 
+SELECT empno,ename,
+	CASE 
+	WHEN mgr IS NOT NULL THEN CAST(mgr AS TEXT) 
+	ELSE 'No Manager'
+	END
+FROM emp1; --> FOR POSTRGRESQL
+--Display "Eligible" if commission exists; otherwise "Not Eligible".
+SELECT empno,ename,comm,NVL2(comm,'Eligible','Not Eligible') FROM emp1;
+OR
+SELECT empno,ename,
+    CASE
+    WHEN comm IS NOT NULL THEN 'Eligible'
+    ELSE 'Not Eligible'
+    END
+FROM emp1; --> FOR POSTGRESQL
+
+--DECODE() (Oracle Only)
+--Display department names using department numbers.
+SELECT empno,ename,DECODE(deptno,10,'ACCOUNTING',20,'RESEARCH',30,'SALES','OTHER') FROM emp1;
+OR
+SELECT empno,ename,
+    CASE deptno
+    WHEN 10 THEN 'ACCOUNTING'
+    WHEN 20 THEN 'RESEARCH'
+    WHEN 30 THEN 'SALES'
+    ELSE 'OTHER'
+    END
+FROM emp1;
+--Display job grades using JOB column.
+SELECT empno, ename, job,DECODE(UPPER(job),'CLERK','E','SALESMAN','D','ANALYST','C','MANAGER','B','PRESIDENT','A','Unknown Grade') AS grade
+FROM emp1;
+OR 
+SELECT empno, ename, job,
+    CASE UPPER(job) 
+    WHEN 'CLERK' THEN 'E' 
+    WHEN 'SALESMAN' THEN 'D' 
+    WHEN 'ANALYST' THEN 'C' 
+    WHEN 'MANAGER' THEN 'B' 
+    WHEN 'PRESIDENT' THEN 'A' 
+    ELSE 'Unknown Grade' 
+	END AS grade
+FROM emp1; --> FOR POSTGRESQL
+--Increase salary based on JOB: MANAGER → +1000 ANALYST → +800 Others → +500
+SELECT empno,ename,job,DECODE(job,'MANAGER',sal+1000,'ANALYST',sal+800,sal+500) FROM emp1;
+OR 
+SELECT empno,ename,job,
+    CASE UPPER(job)
+    WHEN 'MANAGER' THEN sal+1000
+    WHEN 'ANALYST' THEN sal+800
+    ELSE sal+500
+    END AS inc_sal
+FROM emp1; --> FOR POSTGRESQL
+--Convert department numbers into city names.
+SELECT empno, ename, deptno, DECODE(deptno,10,'NEW YORK',20,'DALLAS',30,'CHICAGO',40,'BOSTON','REMOTE/OTHER') AS city_location FROM emp1;
+OR 
+SELECT empno, ename, deptno,
+    CASE deptno
+        WHEN 10 THEN 'NEW YORK'
+        WHEN 20 THEN 'DALLAS'
+        WHEN 30 THEN 'CHICAGO'
+        WHEN 40 THEN 'BOSTON'
+        ELSE 'REMOTE / OTHER'
+    END AS city_location
+FROM emp1;
+
+--NULLIF()
+--Compare salary and commission; return NULL if both are equal.
+SELECT empno,ename,sal,comm,NULLIF(sal,comm) FROM emp1;
+--Prevent division by zero using NULLIF().
+SELECT empno,ename,sal,comm,sal/NULLIF(comm, 0) AS sal_to_comm_ratio 
+FROM emp1; -- If comm is 0, NULLIF turns it to NULL, preventing the division-by-zero crash
+--Compare two columns and return NULL when they are equal.
+SELECT empno,ename,sal,comm,NULLIF(sal,comm) FROM emp1;
+--Compare department number and manager number using NULLIF().
+SELECT empno,ename,deptno,mgr,NULLIF(deptno,mgr) FROM emp1;
+
+--COALESCE()
+--Return the first non-NULL value among COMM, SAL, and 0.
+SELECT empno,ename,comm,sal,COALESCE(comm,sal,0) FROM emp1;
+--Return the first available phone number from Mobile, Home, Office.
+SELECT empno,ename,COALESCE(mobile,home,office) FROM emp1;
+--Return the first available address from Permanent, Temporary, Office.
+SELECT empno,ename,COALESCE(permanant,temporary,office) FROM emp1;
+--Calculate total income using COMM and 0.
+SELECT empno,ename,sal,comm,bonus,sal+COALESCE(comm,0) FROM emp1;
+--Display employee name and commission, showing 'No Commission' when commission is NULL.
+SELECT empno,ename,COALESCE(CAST(comm AS TEXT),'NO COMMISSION') FROM emp1;
+
+--PostgreSQL Extras
+
+--Use GREATEST() to find the highest among Salary, Commission.
+SELECT empno,ename,sal,comm,GREATEST(sal,COALESCE(comm, 0)) AS highest_pay_component
+FROM emp1; --> Finds the highest value among the two, treating NULLs as 0
+--Use LEAST() to find the smallest among Salary and Commission.
+SELECT empno,ename,sal,comm,LEAST(COALESCE(sal,0),COALESCE(comm,0)) FROM emp1;
+--Find the maximum of three numbers using GREATEST().
+SELECT GREATEST(100,121,94);
+--Find the minimum of three numbers using LEAST().
+SELECT LEAST(100,121,94);
+--Use COALESCE() with GREATEST().
+SELECT empno,ename,sal,comm,GREATEST(sal,COALESCE(comm, 0)) AS highest_pay_component
+--Use COALESCE() with LEAST().
+SELECT empno,ename,sal,comm,LEAST(COALESCE(sal,0),COALESCE(comm,0)) FROM emp1;
+--Replace NULL commission before calculating gross salary using COALESCE().
+SELECT empno,ename,sal,comm,COALESCE(sal,0)+COALESCE(comm,0) as gross_sal FROM emp1;
+--Find the greatest annual salary among employees.
+SELECT empno,ename,sal,GREATEST(SAL*12) AS annu_sal FROM emp1;
+--Display employee name with gross salary using COALESCE().
+SELECT empno,ename,sal,comm,COALESCE(sal,0)+COALESCE(comm,0) as gross_sal FROM emp1;
