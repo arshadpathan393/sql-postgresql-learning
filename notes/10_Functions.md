@@ -1104,9 +1104,10 @@ MySQL
 
 ### Syntax
     SELECT RANDOM();
+    SELECT RANDOM(starting_number,ending_number) --> for specific range
 ### Example
-    SELECT RANDOM();
-
+    SELECT RANDOM(); -> 0.648153100
+    SELECT RANDOM(1,100) -> 25
 ### Database Difference
     PostgreSQL
         RANDOM()
@@ -1154,4 +1155,186 @@ MySQL
     Q. Which function returns the square root?
     Ans.
         -> SQRT()
+---
+
+# 2.3 General Functions
+    -> General functions are used to handle NULL values and implement
+       conditional logic.
+    -> They improve data handling and query flexibility.
+
+## Types of General Functions
+    NVL()
+    NVL2()
+    DECODE()
+    NULLIF()
+    COALESCE()    
+---
+
+## NVL() Function
+    -> NVL() replaces a NULL value with the specified value.
+    -> It accepts only two arguments.
+### Syntax
+    SELECT NVL(expression,replacement_value);
+### Example
+    SELECT NVL(comm,0) FROM emp;
+### Database Difference
+    Oracle
+        NVL()
+
+    PostgreSQL
+        COALESCE()
+
+    MySQL
+        IFNULL()
+
+### PostgreSQL Equivalent
+    SELECT COALESCE(comm,0) FROM emp;
+
+### Important Notes
+    -> NVL() is Oracle-specific.
+    -> PostgreSQL uses COALESCE() instead.
+    -> COALESCE() is ANSI SQL standard.
+### Interview Point
+    Q. What is the PostgreSQL equivalent of NVL()?
+    Ans.
+        -> COALESCE()
+---
+
+## NVL2() Function
+    -> NVL2() checks whether an expression is NULL.
+    -> If the expression is NOT NULL, it returns one value.
+    -> If the expression is NULL, it returns another value.
+### Syntax
+    SELECT NVL2(expression,value_if_not_null,value_if_null);
+### Example
+    SELECT NVL2(comm,'Has Commission','No Commission') FROM emp;
+
+### Database Difference
+    Oracle
+        NVL2()
+
+    PostgreSQL
+        CASE expression
+
+### PostgreSQL Equivalent
+    SELECT CASE
+            WHEN comm IS NOT NULL
+            THEN 'Has Commission'
+            ELSE 'No Commission'
+        END
+    FROM emp;
+
+### Important Notes
+    -> NVL2() is Oracle-specific.
+    -> PostgreSQL uses CASE for the same functionality.
+    -> Useful for conditional output.
+### Interview Point
+    Q. What is the PostgreSQL equivalent of NVL2()?
+    Ans.
+        -> CASE expression.
+---
+
+## DECODE() Function
+    -> DECODE() compares an expression with search values.
+    -> When a match is found, it returns the corresponding result.
+    -> It works similarly to SWITCH or CASE.
+### Syntax
+    SELECT DECODE(expression,search1,result1,search2,result2,default_result);
+### Example
+    SELECT DECODE(deptno,10,'ACCOUNTING',20,'RESEARCH',30,'SALES','OTHERS') FROM emp;
+
+### Database Difference
+    Oracle
+        DECODE()
+
+    PostgreSQL
+        CASE
+
+    MySQL
+        CASE
+
+### PostgreSQL Equivalent
+    SELECT CASE deptno
+            WHEN 10 THEN 'ACCOUNTING'
+            WHEN 20 THEN 'RESEARCH'
+            WHEN 30 THEN 'SALES'
+            ELSE 'OTHERS'
+        END
+    FROM emp;
+
+### Important Notes
+    -> DECODE() is Oracle-specific.
+    -> CASE is ANSI SQL standard.
+    -> Prefer CASE for better portability.
+### Interview Point
+    Q. What is the PostgreSQL equivalent of DECODE()?
+    Ans.
+        -> CASE
+---
+
+## NULLIF() Function
+    -> NULLIF() compares two expressions.
+    -> If both expressions are equal, it returns NULL.
+    -> Otherwise, it returns the first expression.
+### Syntax
+    SELECT NULLIF(expression1,expression2);
+### Example
+    SELECT NULLIF(100,100);
+    SELECT NULLIF(100,50);
+
+### Important Notes
+    -> Returns NULL only when both values are equal.
+    -> Frequently used to prevent divide-by-zero errors.
+### Interview Point
+    Q. What is the purpose of NULLIF()?
+    Ans.
+        -> Returns NULL when both expressions are equal.
+---
+
+## COALESCE() Function
+    -> COALESCE() returns the first non-NULL value from the given list.
+### Syntax
+    SELECT COALESCE(expression1,expression2,...);
+### Example
+    SELECT COALESCE(NULL,NULL,NULL,100,50);
+    SELECT COALESCE(NULL,NULL,NULL,100,NULL);
+    SELECT ename,COALESCE(comm,0) FROM emp;
+
+### Important Notes
+    -> Returns the first non-NULL value.
+    -> Can accept multiple expressions.
+    -> Commonly used to replace NULL values.
+
+### Database Difference
+PostgreSQL
+    COALESCE()
+
+Oracle
+    COALESCE()
+
+MySQL
+    COALESCE()
+
+### Interview Point
+Q. Which function replaces NULL values?
+Ans.
+    -> COALESCE()
+---
+
+## General Functions Summary
+    NVL() -> Replaces a NULL value with the specified value.
+    NVL2() -> Checks expression is NULL or NOT NULL, if NOT NULL it returns 1st value and if NUll it returns 2nd value.
+    DECODE() -> It is similar to SWITCH CASE, it compares and expression with search values.
+    NULLIF() -> Returns NULL if both expressions are equal.
+    COALESCE() -> Returns first non-NULL value.
+---
+
+## Most Asked Interview Questions
+    Q. Which function replaces NULL values?
+    Ans.
+        -> COALESCE()/NVL()
+
+    Q. What does NULLIF() return when both expressions are equal?
+    Ans.
+        -> NULL
 ---
