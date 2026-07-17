@@ -1094,3 +1094,172 @@ SELECT empno,ename,sal,comm,COALESCE(sal,0)+COALESCE(comm,0) as gross_sal FROM e
 SELECT empno,ename,sal,GREATEST(SAL*12) AS annu_sal FROM emp1;
 --Display employee name with gross salary using COALESCE().
 SELECT empno,ename,sal,comm,COALESCE(sal,0)+COALESCE(comm,0) as gross_sal FROM emp1;
+----------------------------------------------------------------------------------------------
+3.-- CONVERSION FUNCTIONS
+a.-- CAST()
+SELECT CAST('100' AS INTEGER);
+SELECT CAST(121.36 AS INTEGER);
+SELECT CAST(121 AS CHAR); --> 1
+SELECT CAST(121 AS VARCHAR); --> 121
+SELECT CAST(121 AS TEXT); --> 121
+SELECT empno,ename,COALESCE(CAST(mgr AS TEXT),'CEO') FROM emp1;
+SELECT empno,ename,COALESCE(TO_CHAR(mgr,'9999'),'CEO') FROM emp1;
+
+b.-- TO_CHAR()
+SELECT TO_CHAR(CURRENT_DATE,'DD-MM-YYYY');
+SELECT TO_CHAR(CURRENT_DATE,'DD-MON-YYYY');
+SELECT TO_CHAR(sal,'$9999.99') FROM emp1;
+SELECT empno,ename,NVL(TO_CHAR(mgr,'9999'),'CEO') FROM emp1;
+
+c.-- TO_DATE()
+SELECT TO_DATE('06-07-2026','DD-MM-YYYY');--> 2026-07-06
+SELECT TO_DATE('06-07-2026','MM-DD-YYYY');--> 2026-06-07
+SELECT TO_DATE('06-JUL-26','DD-MON-YY');--> 2026-07-06
+SELECT TO_DATE('06-JUL-2026','DD-MON-YYYY');--> 2026-07-06
+SELECT TO_DATE('26-07-06','YY-DD-MM');--> 2026-06-07
+
+d.-- TO_NUMBER()
+SELECT TO_NUMBER('1250','9999'); --> 1250   
+SELECT TO_NUMBER('12345.75','99999.99'); --> 12345.75
+SELECT TO_NUMBER('D12C','9999'); --> 12
+SELECT TO_NUMBER('ABDC','9999'); --> error
+
+--QUERIES
+
+--CAST() (ANSI SQL / PostgreSQL / Oracle)
+--Convert an integer to VARCHAR.
+SELECT CAST(123 AS VARCHAR);
+OR 
+SELECT 123 :: VARCHAR;
+--Convert a string '12345' to an integer.
+SELECT CAST('12345' AS INTEGER);
+--Convert a string '1234.56' to a numeric value.
+SELECT CAST('12345.56' AS NUMERIC);
+--Convert employee salary to VARCHAR.
+SELECT empno,ename,CAST(sal AS VARCHAR) FROM emp1;
+--Convert employee number to text.
+SELECT empno,CAST(empno AS TEXT) FROM emp1;
+--Convert a string '2026-07-17' to DATE using CAST().
+SELECT CAST('2026-07-17' AS DATE) FROM emp1;
+--Convert a DATE to TIMESTAMP.
+SELECT CAST(CURRENT_DATE AS TIMESTAMP) FROM emp1;
+--Convert TIMESTAMP to DATE.
+SELECT CAST(NOW() AS DATE) FROM emp1;
+OR 
+SELECT NOW()::DATE FROM emp1;
+--Convert salary to DECIMAL(10,2).
+SELECT empno,ename,sal,CAST(sal AS NUMERIC(10,2)) FROM emp1;
+--Find employees whose salary is greater than '3000' after converting the string to a number.
+SELECT empno,ename,sal FROM emp1
+WHERE sal > '3000'::INTEGER
+
+--TO_CHAR() (Oracle & PostgreSQL)
+--Number Formatting
+--Display salary as a character string.
+SELECT empno,ename,sal,TO_CHAR(sal,'99999') FROM emp1;
+--Display salary with commas (e.g., 12,345).
+SELECT empno,ename,sal,TO_CHAR(sal,'99,999') FROM emp1;
+--Display salary with two decimal places.
+SELECT empno,ename,sal,TO_CHAR(sal,'99999.99') FROM emp1;
+--Display salary with leading zeros.
+SELECT empno,ename,sal,TO_CHAR(sal,'09999.99') FROM emp1;
+--Display annual salary in formatted currency.
+SELECT empno,ename,sal,TO_CHAR(sal*12,'$999999.99') AS annu_sal FROM emp1;
+--Date Formatting
+--Display the hire date as DD-MM-YYYY.
+SELECT empno,ename,hiredate,TO_CHAR(hiredate,'DD-MM-YYYY') FROM emp1;
+--Display the hire date as DD-MON-YYYY.
+SELECT empno,ename,hiredate,TO_CHAR(hiredate,'DD-MON-YYYY') FROM emp1;
+--Display the hire date as Month DD, YYYY.
+SELECT empno,ename,hiredate,TO_CHAR(hiredate,'MONTH DD, YYYY') FROM emp1;
+--Display only the month name from the hire date.
+SELECT empno,ename,hiredate,TO_CHAR(hiredate,'MONTH') AS hiring_month FROM emp1;
+--Display only the day name from the hire date.
+SELECT empno,ename,hiredate,TO_CHAR(hiredate,'DAY') AS hiring_day FROM emp1;
+--Display only the year from the hire date.
+SELECT empno,ename,hiredate,TO_CHAR(hiredate,'YYYY') AS hiring_year FROM emp1;
+--Display the current date in DD/MM/YYYY format.
+SELECT TO_CHAR(CURRENT_DATE,'DD/MM/YYYY');
+--Display the current timestamp in DD-MM-YYYY HH24:MI:SS.
+SELECT TO_CHAR(CURRENT_TIMESTAMP,'DD-MM-YYYY HH24:MI:SS');
+--Display the day number of the week.
+SELECT TO_CHAR(CURRENT_TIMESTAMP,'D');
+--Display the week number of the year.
+SELECT TO_CHAR(CURRENT_TIMESTAMP,'WW');
+
+--TO_DATE() (Oracle)
+--Convert '15-08-2025' to a DATE.
+SELECT TO_DATE('15-08-2025','DD-MM-YYYY');
+--Convert '2025/08/15' to a DATE.
+SELECT TO_DATE('2025/08/15','YYYY/MM/DD');
+--Convert '15-AUG-2025' to a DATE.
+SELECT TO_DATE('15-AUG-2025','DD-MON-YYYY');
+--Find employees hired after '01-JAN-1982' using TO_DATE().
+SELECT empno,ename,hiredate FROM emp1
+WHERE hiredate > TO_DATE('01-JAN-1982','DD-MON-YYYY');
+--Insert a date using TO_DATE().
+INSERT INTO emp1 VALUES(9999,'ABCD','VC',7369,TO_DATE('17-07-2026','DD-MM-YYYY'),1000.00,400);
+--Compare a date column with a converted string date '17-12-1980'. 
+SELECT empno, ename, hiredate 
+FROM emp1
+WHERE hiredate = TO_DATE('17-12-1980', 'DD-MM-YYYY');
+--Find employees hired between two dates '01-01-1982' and '31-12-1983' using TO_DATE().
+SELECT empno, ename, hiredate 
+FROM emp1
+WHERE hiredate BETWEEN TO_DATE('01-01-1981', 'DD-MM-YYYY') AND TO_DATE('31-12-1983', 'DD-MM-YYYY');
+--PostgreSQL Note: PostgreSQL also supports TO_DATE(text, format), but you can often use CAST('2025-08-15' AS DATE) 
+--or the DATE '2025-08-15' literal.
+
+--TO_NUMBER() (Oracle)
+--Convert '12345' to a number.
+SELECT TO_NUMBER('12345','99999');--> ORACLE
+SELECT TO_NUMBER('12345','99999');--> FOR POSTGRESQL
+--Convert '12345.67' to a number.
+SELECT TO_NUMBER('12345.67','99999.99');
+--Convert a formatted string '12,345' to a number.
+SELECT TO_NUMBER('12,345','99,999');
+--Compare salary with a numeric string '3000.00' using TO_NUMBER().
+SELECT empno, ename, sal 
+FROM emp1
+WHERE sal = TO_NUMBER('3000.00', '99999.99');
+--Add two numeric strings after converting them to numbers.
+SELECT TO_NUMBER('123','999')+ TO_NUMBER('345','999');
+--Convert a salary stored as text into a numeric value.
+SELECT empno, ename, TO_NUMBER(sal,'99999.99') FROM emp1
+--PostgreSQL Note: Prefer CAST() or ::numeric instead of TO_NUMBER() for plain conversions. Use TO_NUMBER() 
+--mainly when parsing formatted numeric strings.
+
+--PostgreSQL-Specific Practice
+--Convert a string to INTEGER using ::INT.
+SELECT '99999':: INT;
+--Convert salary to TEXT using ::TEXT.
+SELECT empno,ename,sal :: TEXT FROM emp1;
+--Convert a string to NUMERIC using ::NUMERIC.
+SELECT '95486.32' :: NUMERIC;
+--Convert a string to DATE using ::DATE.
+SELECT '15-05-1985' :: DATE;
+--Convert CURRENT_TIMESTAMP to DATE.
+SELECT CURRENT_TIMESTAMP :: DATE;
+--Compare CAST() and :: notation for the same conversion.
+SELECT empno, ename, CAST(sal AS NUMERIC(10,2)) FROM emp1;
+SELECT empno, ename, sal :: NUMERIC(10,2) FROM emp1;
+--Convert 'true' to BOOLEAN.
+SELECT 'true' :: BOOLEAN;
+--Convert BOOLEAN to TEXT.
+SELECT false :: TEXT;
+--Convert a numeric value to TEXT and concatenate it with employee name.
+SELECT CONCAT(empno :: TEXT,ename) FROM emp1;
+--Convert a DATE to TEXT and display it in a report.
+SELECT hiredate :: TEXT FROM emp1;
+
+--Interview / Practical Questions
+--Display employee name, salary, and formatted hire date in a single query.
+--Convert salary to text and concatenate it with ' INR'.
+--Display annual salary with commas and two decimal places.
+--Find employees hired after a user-entered date string.
+--Convert user input to the appropriate data type before comparison.
+--Insert employee data where the joining date is provided as a string.
+--Convert a formatted amount ('₹12,500.50' or '12,500.50') into a numeric value.
+--Display the current date and time in a custom report format.
+--Display month-wise hiring information using formatted dates.
+--Build a report showing employee name, formatted salary, and formatted hire date.
