@@ -1450,3 +1450,413 @@ Ans.
     Ans.
         -> TO_NUMBER()
 ---
+
+# 2.5 Date Functions
+    -> Date functions are used to manipulate and retrieve date and time values.
+    -> They return the current date, current time or perform date calculations.
+
+## Types of Date Functions
+    CURRENT_DATE/SYSDATE
+    CURRENT_TIME
+    CURRENT_TIMESTAMP
+    NOW()
+    AGE()   
+    EXTRACT()
+    DATE_TRUNC()
+    TO_TIMESTAMP()
+    INTERVAL()
+    ADD_MONTHS()
+    MONTHS_BETWEEN()
+    NEXT_DAY()
+    LAST_DAY()
+---
+
+## CURRENT_DATE
+    -> CURRENT_DATE returns the current system date.
+### Syntax
+    SELECT CURRENT_DATE;
+### Example
+    SELECT CURRENT_DATE;
+### Database Difference
+    PostgreSQL
+        CURRENT_DATE
+
+    Oracle
+        SYSDATE
+
+    MySQL
+        CURRENT_DATE()
+
+### Important Notes
+    -> Returns only the current date.
+    -> Time information is not included.
+    -> Parentheses are not required in PostgreSQL.
+### Interview Point
+    Q. Which function returns the current date?
+    Ans.
+        -> CURRENT_DATE/SYSDATE
+---
+
+## CURRENT_TIME
+    -> CURRENT_TIME returns the current system time with time zone.
+### Syntax
+    SELECT CURRENT_TIME;
+### Example
+    SELECT CURRENT_TIME;
+
+### Important Notes
+    -> Returns only the current time.
+    -> Includes time zone information.
+    -> Parentheses are not required.
+    -> There is no function in oracle to fetch just time.
+### Interview Point
+    Q. Which function returns only the current time?
+    Ans.
+        -> CURRENT_TIME
+---
+
+## CURRENT_TIMESTAMP
+    -> CURRENT_TIMESTAMP returns the current date and time.
+### Syntax
+    SELECT CURRENT_TIMESTAMP;
+### Example
+    SELECT CURRENT_TIMESTAMP;
+
+### Important Notes
+    -> Returns both date and time.
+    -> Includes fractional seconds and time zone.
+    -> Frequently used while storing audit information.
+### Interview Point
+    Q. Which function returns both date and time?
+    Ans.
+        -> CURRENT_TIMESTAMP
+---
+
+## NOW()
+    -> NOW() returns the current date and time.
+    -> In PostgreSQL, NOW() is equivalent to CURRENT_TIMESTAMP.
+### Syntax
+    SELECT NOW();
+### Example
+    SELECT NOW();
+### Database Difference
+    PostgreSQL
+        NOW()
+
+    Oracle
+        SYSTIMESTAMP
+
+    MySQL
+        NOW()
+
+### Important Notes
+    -> Commonly used in PostgreSQL applications.
+    -> Returns the current transaction timestamp.
+### Interview Point
+    Q. Difference between NOW() and CURRENT_TIMESTAMP?
+    Ans.
+        -> In PostgreSQL both return the current timestamp.
+---
+
+## AGE()
+    -> AGE() calculates the difference between two dates.
+    -> It returns the result as years, months and days.
+### Syntax
+    SELECT AGE(date1,date2);
+### Example
+    SELECT AGE('2026-07-06','2000-01-15');
+
+### Database Difference
+    PostgreSQL
+        AGE()
+
+    Oracle
+        No direct equivalent.
+
+    MySQL
+        No direct equivalent.
+
+### Important Notes
+    -> PostgreSQL specific function.
+    -> Frequently used to calculate age or service period.
+### Interview Point
+    Q. Which PostgreSQL function calculates age between two dates?
+    Ans.
+        -> AGE()
+---
+
+## EXTRACT()
+    -> EXTRACT() retrieves a specific part of a date or timestamp.
+### Syntax
+    SELECT EXTRACT(field FROM source);
+### Example
+    SELECT EXTRACT(YEAR FROM CURRENT_DATE);
+    SELECT EXTRACT(MONTH FROM CURRENT_DATE);
+
+### Important Notes
+    -> Can extract YEAR, MONTH, DAY, HOUR, MINUTE and SECOND.
+    -> Commonly used in reports.
+### Interview Point
+    Q. Which function extracts YEAR or MONTH from a date?
+    Ans.
+        -> EXTRACT()
+---
+
+## DATE_TRUNC()
+    -> DATE_TRUNC() truncates a date or timestamp to a specified precision.
+### Syntax
+    SELECT DATE_TRUNC('month',CURRENT_TIMESTAMP);
+### Example
+    SELECT DATE_TRUNC('day',CURRENT_TIMESTAMP);
+
+### Database Difference
+    PostgreSQL
+        DATE_TRUNC()
+
+    Oracle
+        TRUNC(date)
+
+    MySQL
+        No direct equivalent.
+
+### Important Notes
+    -> PostgreSQL specific function.
+    -> Frequently used in reporting and analytics.
+### Interview Point
+    Q. Which PostgreSQL function truncates a timestamp?
+    Ans.
+        -> DATE_TRUNC()
+---
+
+## TO_TIMESTAMP() Function
+    -> TO_TIMESTAMP() converts a character string into a TIMESTAMP value.
+
+### Syntax
+    SELECT TO_TIMESTAMP(string,format);
+### Example
+    SELECT TO_TIMESTAMP('2026-07-07 10:30:45','YYYY-MM-DD HH24:MI:SS');
+
+### Database Difference
+    PostgreSQL
+        TO_TIMESTAMP()
+
+    Oracle
+        TO_TIMESTAMP()
+
+    MySQL
+        STR_TO_DATE()
+
+### Important Notes
+    -> Used to convert character data into TIMESTAMP.
+    -> Input format must match the format string.
+    -> Frequently used while importing data.
+### Interview Point
+    Q. Which function converts a string into TIMESTAMP?
+    Ans.
+        -> TO_TIMESTAMP()
+---
+
+## INTERVAL
+    -> INTERVAL represents a duration of time.
+    -> It is used to add or subtract a specific period from a DATE or
+    TIMESTAMP value.
+
+### Syntax
+    SELECT CURRENT_DATE + INTERVAL '5 days';
+    SELECT CURRENT_TIMESTAMP + INTERVAL '2 hours';
+### Example
+    SELECT CURRENT_DATE + INTERVAL '10 days';
+    SELECT CURRENT_DATE - INTERVAL '1 month';
+
+### Database Difference
+    PostgreSQL
+        INTERVAL
+
+    Oracle
+        Uses numeric arithmetic or INTERVAL datatype.
+
+    MySQL
+        DATE_ADD()
+        DATE_SUB()
+
+### Important Notes
+    -> Supports DAY, MONTH, YEAR, HOUR, MINUTE and SECOND.
+    -> Frequently used for date calculations.
+    -> Commonly used in backend applications.
+### Interview Point
+    Q. What is the purpose of INTERVAL?
+    Ans.
+        -> To add or subtract a period from a DATE or TIMESTAMP.
+---
+
+## ADD_MONTHS() Function
+    -> ADD_MONTHS() adds the specified number of months to a date.
+
+### Syntax
+    SELECT ADD_MONTHS(date,number_of_months);
+### Example
+    SELECT ADD_MONTHS(TO_DATE('09-07-2026','DD-MM-YYYY'),3) FROM dual;
+### PostgreSQL Equivalent
+    SELECT DATE '2026-07-09'+ INTERVAL '3 months';
+
+### Database Difference
+    PostgreSQL
+        INTERVAL
+
+    Oracle
+        ADD_MONTHS()
+
+    MySQL
+        DATE_ADD()
+
+### Important Notes
+    -> ADD_MONTHS() is Oracle-specific.
+    -> PostgreSQL uses INTERVAL.
+    -> Frequently used while calculating expiry dates.
+### Interview Point
+    Q. What is the PostgreSQL equivalent of ADD_MONTHS()?
+    Ans.
+        -> INTERVAL
+---
+
+## MONTHS_BETWEEN() Function
+    -> MONTHS_BETWEEN() returns the number of months between two dates.
+### Syntax
+    SELECT MONTHS_BETWEEN(date1,date2);
+### Oracle Example
+    SELECT MONTHS_BETWEEN(DATE '2026-07-09',DATE '2026-01-09') FROM dual;
+### PostgreSQL Equivalent
+    SELECT EXTRACT(YEAR FROM AGE(DATE '2026-07-09',DATE '2026-01-09')) * 12 +
+        EXTRACT(MONTH FROM AGE(DATE '2026-07-09',DATE '2026-01-09'));
+
+### Database Difference
+PostgreSQL
+    AGE()
+    EXTRACT()
+
+Oracle
+    MONTHS_BETWEEN()
+
+MySQL
+    TIMESTAMPDIFF(MONTH,...)
+
+### Important Notes
+    -> MONTHS_BETWEEN() is Oracle-specific.
+    -> PostgreSQL uses AGE() with EXTRACT().
+    -> Frequently used for experience and tenure calculations.
+### Interview Point
+    Q. What is the PostgreSQL equivalent of MONTHS_BETWEEN()?
+    Ans.
+        -> AGE() with EXTRACT().
+---
+
+## LAST_DAY() Function
+    -> LAST_DAY() returns the last day of the month.
+
+### Syntax
+    SELECT LAST_DAY(date);
+### Oracle Example
+    SELECT LAST_DAY(SYSDATE) FROM dual;
+### PostgreSQL Equivalent
+    SELECT DATE_TRUNC('MONTH',CURRENT_DATE)+ INTERVAL '1 MONTH'- INTERVAL '1 DAY';
+### Database Difference
+    PostgreSQL
+        DATE_TRUNC() + INTERVAL
+
+    Oracle
+        LAST_DAY()
+
+    MySQL
+        LAST_DAY()
+
+### Important Notes
+    -> Oracle provides LAST_DAY() directly.
+    -> PostgreSQL uses DATE_TRUNC() with INTERVAL.
+    -> Commonly used in payroll and reporting.
+### Interview Point
+    Q. What is the PostgreSQL equivalent of LAST_DAY()?
+    Ans.
+        -> DATE_TRUNC() with INTERVAL.
+---
+
+## Best Practices
+    -> Use CONCAT() or '||' consistently throughout a project.
+    -> Use TRIM() before storing user input when appropriate.
+    -> Use REPLACE() instead of multiple nested string operations.
+    -> Use meaningful aliases for calculated columns.
+    -> Use REGEXP_REPLACE() for data cleaning.
+    -> Use REGEXP_MATCHES() for complex validations.
+    -> Use STRING_AGG() for reporting and exporting data.
+    -> Use appropriate separators in STRING_AGG().
+    -> Keep regular expressions simple and readable.
+    -> Use COALESCE() instead of handling NULL values in application code.
+    -> Use CASE instead of writing multiple queries.
+    -> Keep CASE expressions simple and readable.
+    -> Use meaningful aliases for calculated columns.
+    -> Use CAST() whenever possible because it follows ANSI SQL.
+    -> Validate input before using TO_NUMBER().
+    -> Always specify the correct date format in TO_DATE().
+    -> Use TO_CHAR() for displaying formatted dates and numbers.
+    -> Use ROUND() for financial calculations.
+    -> Use MOD() instead of complex remainder calculations.
+    -> Validate input before using SQRT().
+    -> Use meaningful aliases for calculated values.
+
+---
+
+## Common Mistakes
+    -> Confusing LENGTH() with SUBSTR().
+    -> Using CONCAT() for numeric addition.
+    -> Assuming REPLACE() changes only the first occurrence.
+    -> Forgetting that PostgreSQL string comparisons are
+    -> Forgetting the 'g' flag in REGEXP_REPLACE().
+    -> Using complex regular expressions unnecessarily.
+    -> Confusing STRING_AGG() with CONCAT().
+    -> Using STRING_AGG() without GROUP BY when grouping is required.
+    -> Confusing NULLIF() with COALESCE().
+    -> Forgetting the ELSE condition in CASE.
+    -> Writing deeply nested CASE expressions.
+    -> Replacing NULL values with inappropriate defaults.
+    -> Using an incorrect format in TO_DATE().
+    -> Converting invalid strings using TO_NUMBER().
+    -> Assuming CAST() and TO_CHAR() are interchangeable.
+    -> Ignoring datatype compatibility.
+    -> Confusing ROUND() with CEIL().
+    -> Confusing CEIL() with FLOOR().
+    -> Dividing by zero before using MOD().
+    -> Using SQRT() with negative values.
+
+---
+
+## Performance Tips
+    -> Avoid unnecessary nested CASE expressions.
+    -> Keep CASE conditions simple.
+    -> Use COALESCE() only when required.
+    -> Avoid applying functions on indexed columns inside WHERE clauses.
+    -> Avoid unnecessary datatype conversions.
+    -> Store data using appropriate datatypes.
+    -> Avoid applying conversion functions on indexed columns inside WHERE clauses.
+    -> Avoid applying functions to indexed columns in WHERE clauses.
+    -> Use functions only when required.
+    -> Store clean data instead of repeatedly calling TRIM().
+    -> Avoid unnecessary nested function calls in large queries.
+    -> Regular expressions are slower than simple string functions.
+    -> Use REPLACE() instead of REGEXP_REPLACE() when a regular expression is not required.
+    -> Avoid complex regular expressions on large datasets.
+    -> Use STRING_AGG() only when row concatenation is actually required.
+    -> Numeric functions have very low overhead.
+    -> Avoid repeatedly calculating the same expression.
+    -> Compute values once whenever possible.
+    -> Avoid applying numeric functions to indexed columns inside WHERE clauses.
+
+## Function Selection Guide
+    Need to count rows?             → COUNT()
+    Need total?                     → SUM()
+    Need average?                   → AVG()
+    Need uppercase?                 → UPPER()
+    Need substring?                 → SUBSTR()
+    Need replace text?              → REPLACE()
+    Need current date?              → CURRENT_DATE
+    Need datatype conversion?       → CAST()
+    Need replace NULL values?       → COALESCE()
+    Need conditional logic?         → CASE

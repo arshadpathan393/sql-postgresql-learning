@@ -1263,3 +1263,19 @@ SELECT hiredate :: TEXT FROM emp1;
 --Display the current date and time in a custom report format.
 --Display month-wise hiring information using formatted dates.
 --Build a report showing employee name, formatted salary, and formatted hire date.
+----------------------------------------------------------------------------------------------
+4.-- DATE FUNCTIONS
+a.-- CURRENT_DATE
+SELECT CURRENT_DATE; --> FOR POSTGRESQL & MYSQL
+SELECT SYSDATE FROM DUAL;--> FOR ORACLE
+
+b.-- CURRENT_TIME
+SELECT CURRENT_TIME;
+
+c.-- CURRENT_TIMESTAMP
+SELECT CURRENT_TIMESTAMP;
+SELECT SYSTIMESTAMP FROM DUAL; --> FOR ORACLE
+
+d.-- NOW()
+SELECT NOW();
+SELECT SYSTIMESTAMP FROM DUAL; --> FOR ORACLE
