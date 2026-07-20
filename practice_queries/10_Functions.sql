@@ -1326,3 +1326,197 @@ m.-- NEXT_DAY()
 SELECT next_day(CURRENT_DATE, 'MON');
 SELECT next_day(DATE '2026-07-20', 'FRI');
 SELECT next_day(CURRENT_DATE, 'SUNDAY');
+
+--QUERIES
+
+--Current Date & Time
+--Display the current date.
+SELECT CURRENT_DATE;
+--Display the current date and time.
+SELECT CURRENT_TIMESTAMP;
+--Display only the current time.
+SELECT CURRENT_TIME;
+--Display the current timestamp with time zone.
+SELECT NOW();
+SELECT CURRENT_TIMESTAMP;
+--Display the current date in your session time zone.
+SELECT NOW();
+SELECT CURRENT_TIMESTAMP;
+
+--Date Arithmetic
+--Display the date after 10 days from today.
+SELECT CURRENT_DATE + INTERVAL '10 DAYS';
+--Display the date 30 days before today.
+SELECT CURRENT_DATE - INTERVAL '30 DAYS';
+--Find the number of days an employee has worked.
+SELECT empno,ename,hiredate,AGE(CURRENT_DATE,hiredate) AS exp FROM emp1;
+--Find employees who joined in the last 365 days.
+SELECT empno,ename,hiredate FROM emp1
+WHERE hiredate > (CURRENT_DATE - INTERVAL '365 DAYS');
+--Find employees who joined in the last 365 days.
+SELECT empno,ename,hiredate FROM emp1
+WHERE hiredate > CURRENT_DATE - 365; --> IN ORACLE
+--Find employees who have completed more than 5 years of service.
+SELECT empno,ename, hiredate FROM emp1
+WHERE hridedate<=CURRENT_DATE - INTERVAL '5 YEARS';
+SELECT empno,ename, hiredate FROM emp1
+WHERE MONTHS_BETWEEN(SYSDATE,hiredate)>=60; --> IN ORACLE
+--Find the date after adding 90 days to the hire date.
+SELECT empno,ename,hiredate,hiredate + INTERVAL '90 days' FROM emp1;
+SELECT empno,ename,hiredate,hiredate + 90 FROM emp1; --> IN ORACLE
+--Find the date before subtracting 15 days from the hire date.
+SELECT empno,ename,hiredate,hiredate - INTERVAL '15 days' FROM emp1;
+
+--ADD_MONTHS() (Oracle)
+--Add 6 months to the hire date.
+SELECT empno,ename,hiredate,ADD_MONTHS(hiredate,6) FROM emp1;
+SELECT empno,ename,hiredate,hiredate + INTERVAL'6 MONTHS' FROM emp1; --> IN POSTGRESQL
+--Add 1 year (12 months) to the hire date.
+SELECT empno,ename,hiredate,ADD_MONTHS(hiredate,12) FROM emp1;
+SELECT empno,ename,hiredate,hiredate + INTERVAL'1 YEAR' FROM emp1; --> IN POSTGRESQL
+--Display the probation completion date (6 months after joining).
+SELECT empno,ename,hiredate,ADD_MONTHS(hiredate,6) probation_period_end FROM emp1;
+SELECT empno,ename,hiredate,hiredate + INTERVAL'6 MONTHS' AS probation_period_end FROM emp1; --> IN POSTGRESQL
+--Display the retirement eligibility date (add 30 years).
+SELECT empno,ename,hiredate,ADD_MONTHS(hiredate,30*12) FROM emp1;
+SELECT empno,ename,hiredate,hiredate + INTERVAL'30 YEARS' AS retire_eligi_dt FROM emp1; --> IN POSTGRESQL
+--Add 18 months to the current date.
+SELECT SYSDATE,ADD_MONTHS(SYSDATE,18) FROM dual;
+SELECT CURRENT_DATE,CURRENT_DATE + INTERVAL'18 MONTHS'; --> IN POSTGRESQL
+--PostgreSQL Equivalent: Use + INTERVAL '6 months', + INTERVAL '1 year'.
+
+--MONTHS_BETWEEN() (Oracle)
+--Find the number of months between today and the hire date.
+SELECT MONTHS_BETWEEN(SYSDATE,hiredate) FROM emp1;
+SELECT empno,ename,(EXTRACT(YEAR FROM AGE(CURRENT_DATE,hiredate))*12 + 
+EXTRACT(MONTH FROM AGE(CURRENT_DATE,hiredate))) FROM emp1; --> IN POSTGRESQL
+--Find employees with more than 24 months of experience.
+SELECT empno,ename,hiredate FROM emp1
+WHERE MONTHS_BETWEEN(SYSDATE,hiredate)>24;
+SELECT empno,ename,hiredate FROM emp1
+WHERE hiredate< CURRENT_DATE - INTERVAL '24 MONTHS'; --> IN POSTGRESQL
+--Find months between two given dates.
+SELECT MONTHS_BETWEEN('15-JUN-2026','02-SEPT-2012');
+SELECT AGE('15-JUN-2026','02-SEPT-2012'); --> IN POSTGRESQL
+--Find employee experience in months.
+SELECT empno,ename,hiredate,MONTHS_BETWEEN(SYSDATE,hiredate) FROM emp1;
+SELECT empno,ename,hiredate,(EXTRACT(YEARS FROM AGE(CURRENT_DATE,hiredate))*12 + 
+EXTRACT (MONTHS FROM AGE(CURRENT_DATE,hiredate)*12)) AS exp_in_mnth FROM emp1; --> IN POSTGRESQL
+--PostgreSQL Equivalent: AGE() or date arithmetic.
+
+--LAST_DAY() (Oracle)
+--Find the last day of the current month.
+SELECT LAST_DAY(SYSDATE) FROM dual;
+SELECT DATE_TRUNC('MONTH',CURRENT_DATE)+ INTERVAL '1 MONTH'- INTERVAL '1 DAY'; --> IN POSTGRESQL
+--Find the last day of the hire month.
+SELECT empno,ename,LAST_DAY(hiredate) AS last_day_hire_month FROM emp1;
+SELECT empno,ename,hiredate,DATE_TRUNC('MONTH',hiredate)+INTERVAL '1 MONTH'- INTERVAL '1DAY' FROM emp1; --> IN POSTGRESQL
+--Display the month's ending date for every employee.
+SELECT empno,ename,LAST_DAY(hiredate) AS last_day_hire_month FROM emp1;
+SELECT empno,ename,hiredate,DATE_TRUNC('MONTH',hiredate)+INTERVAL '1 MONTH' - INTERVAL '1DAY' FROM emp1; --> IN POSTGRESQL
+--PostgreSQL Equivalent: date_trunc('month', date) + interval '1 month - 1 day'
+
+--NEXT_DAY() (Oracle)
+--Find the next Monday after today.
+SELECT NEXT_DAY(SYSDATE,'MON') FROM dual;
+--Find the next Friday after the hire date.
+SELECT NEXT_DAY(hiredate,'FRI') FROM emp1;
+--Display the next Sunday for each employee.
+SELECT NEXT_DAY(hiredate,'SUN') FROM emp1;
+--PostgreSQL Equivalent: Usually calculated using date arithmetic; no built-in NEXT_DAY().
+
+--EXTRACT()
+--Extract the year from the hire date.
+SELECT empno,ename,hiredate,EXTRACT('YEAR' FROM hiredate) FROM emp1;
+--Extract the month from the hire date.
+SELECT empno,ename,hiredate,EXTRACT('MONTH' FROM hiredate) FROM emp1;
+--Extract the day from the hire date.
+SELECT empno,ename,hiredate,EXTRACT('DAY' FROM hiredate) FROM emp1;
+--Extract the hour from the current timestamp.
+SELECT EXTRACT('HOURS' FROM NOW());
+--Extract the minute from the current timestamp.
+SELECT EXTRACT('MINUTES' FROM CURRENT_TIMESTAMP);
+--Extract the second from the current timestamp.
+SELECT EXTRACT('SECONDS' FROM NOW());
+
+--AGE() (PostgreSQL)
+--Find employee experience using AGE().
+SELECT empno,ename,hiredate,AGE(CURRENT_DATE,hiredate) FROM emp1;
+--Display years and months of service.
+SELECT empno,ename,hiredate,EXTRACT('YEARS' FROM AGE(CURRENT_DATE,hiredate)) AS YEARS,
+EXTRACT('MONTHS' FROM AGE(CURRENT_DATE,hiredate)) AS MONTHS FROM emp1;
+--Find employees with more than 10 years of experience.
+SELECT empno,ename,hiredate FROM emp1
+WHERE hiredate < CURRENT_DATE - INTERVAL'10 YEARS';
+OR
+--Find employees with more than 10 years of experience.
+SELECT empno,ename,hiredate FROM emp1
+WHERE EXTRACT(YEAR FROM AGE(CURRENT_DATE,hiredate))>10;
+
+--DATE_TRUNC() (PostgreSQL)
+--Display the first day of the current month.
+SELECT DATE_TRUNC('month', CURRENT_DATE);
+--Display the first day of the current year.
+SELECT DATE_TRUNC('year', CURRENT_DATE);
+--Truncate the current timestamp to the hour.
+SELECT DATE_TRUNC('HOUR', CURRENT_TIMESTAMP);
+--Truncate the current timestamp to the minute.
+SELECT DATE_TRUNC('MINUTE', CURRENT_TIMESTAMP);
+--Display the first day of the hire month.
+SELECT empno,ename,hiredate,DATE_TRUNC('MONTH',hiredate) FROM emp1;
+
+--INTERVAL (PostgreSQL)
+--Add 15 days to the hire date.
+SELECT empno,ename,hiredate,hiredate + INTERVAL '15 DAYS' FROM emp1;
+--Add 2 years to the hire date.
+SELECT empno,ename,hiredate,hiredate + INTERVAL '2 years' FROM emp1;
+--Subtract 3 months from the current date.
+SELECT empno,ename,hiredate,hiredate - INTERVAL '3 months' FROM emp1;
+--Add 5 hours to the current timestamp.
+SELECT CURRENT_TIMESTAMP + INTERVAL '5 HOURS';
+--Add 30 minutes to the current timestamp.
+SELECT CURRENT_TIMESTAMP + INTERVAL '30 MINUTES';
+
+--Interview / Practical Questions
+--Find employees whose work anniversary is this month.
+SELECT empno,ename,hiredate FROM emp1
+WHERE EXTRACT(MONTH FROM hiredate) = 7;
+OR 
+SELECT empno,ename,hiredate FROM emp1
+WHERE EXTRACT(MONTH FROM hiredate) = EXTRACT(MONTH FROM CURRENT_DATE);
+--Find employees joining in the current year.
+SELECT empno,ename,hiredate FROM emp1
+WHERE EXTRACT(YEAR FROM hiredate) = EXTRACT(YEAR FROM CURRENT_DATE);
+--Find employees hired before 01-JAN-1982.
+SELECT empno,ename, hiredate FROM emp1
+WHERE hiredate < TO_DATE('01-JAN-1982','DD-MON-YYYY');
+--Find employees hired between two given dates.
+SELECT empno,ename,hiredate FROM emp1
+WHERE hiredate BETWEEN '1981-01-01' AND '1981-12-31';
+--Display employee experience in Years, Months, Days.
+SELECT empno,ename,hiredate, AGE(CURRENT_DATE,hiredate) AS exp FROM emp1; 
+--Display employees who joined on a Monday.
+SELECT empno,ename,hiredate FROM emp1
+WHERE EXTRACT(ISDOW FROM HIREDATE)=1 ; 
+OR
+SELECT empno,ename,hiredate FROM emp1
+WHERE TO_CHAR(hiredate, 'FMDAY') = 'MONDAY';
+--Find the number of days left until the end of the current month.
+SELECT CURRENT_DATE + INTERVAL '1 MONTH' - CURRENT_DATE; 
+--Display the first and last day of every employee's joining month.
+SELECT DATE_TRUNC('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH - 1 DAY ' - CURRENT_DATE;
+--Calculate probation completion date (6 months after joining).
+SELECT empno,ename,hiredate, hiredate + INTERVAL '6 MONTHS' AS probation_compl_date  FROM emp1;
+--Calculate contract expiry date (2 years after joining).
+SELECT empno,ename,hiredate, hiredate + INTERVAL '2 years' AS contr_compl_date  FROM emp1;
+--Find employees completing 10 years of service this year.
+SELECT empno,ename,hiredate FROM emp1
+WHERE EXTRACT(YEARS FROM AGE(CURRENT_DATE,hiredate)) > 10;
+--Display employees ordered by experience.
+SELECT empno,ename,hiredate,EXTRACT(YEARS FROM AGE(CURRENT_DATE,hiredate)) AS exp FROM emp1
+ORDER BY exp;
+OR 
+SELECT empno,ename,hiredate, AGE(CURRENT_DATE,hiredate) AS exp FROM emp1
+ORDER BY exp;
+--Display employee name, hire date, and total years of service.
+SELECT ename,hiredate,AGE(CURRENT_DATE,hiredate) AS total_years_service FROM emp1;
