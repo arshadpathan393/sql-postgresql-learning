@@ -1726,8 +1726,8 @@ Ans.
 ### Oracle Example
     SELECT MONTHS_BETWEEN(DATE '2026-07-09',DATE '2026-01-09') FROM dual;
 ### PostgreSQL Equivalent
-    SELECT EXTRACT(YEAR FROM AGE(DATE '2026-07-09',DATE '2026-01-09')) * 12 +
-        EXTRACT(MONTH FROM AGE(DATE '2026-07-09',DATE '2026-01-09'));
+        SELECT EXTRACT(YEAR FROM AGE(DATE '2026-07-09',DATE '2026-01-09')) * 12 +
+            EXTRACT(MONTH FROM AGE(DATE '2026-07-09',DATE '2026-01-09'));
 
 ### Database Difference
 PostgreSQL
@@ -1777,6 +1777,27 @@ MySQL
     Q. What is the PostgreSQL equivalent of LAST_DAY()?
     Ans.
         -> DATE_TRUNC() with INTERVAL.
+---
+## NEXT_DAY() Function
+    -> NEXT_DAY() returns the upcoming date of given day.
+
+### Syntax
+    SELECT NEXT_DAY(date,day);
+### Oracle Example
+    SELECT NEXT_DAY(SYSDATE,'MON') FROM dual;
+    PostgreSQL
+        There is no equivalent function.
+
+    Oracle
+        NEXT_DAY()
+
+    MySQL
+        There is no equivalent function.
+
+### Important Notes
+    -> Oracle provides NEXT_DAY() directly.
+    -> PostgreSQL does not provide equivalent function.
+
 ---
 
 ## Best Practices
