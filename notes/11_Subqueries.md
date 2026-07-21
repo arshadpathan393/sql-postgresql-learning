@@ -34,12 +34,12 @@
     -> To improve query readability in many scenarios.
 
 ### Real-Time Examples
-    Employee salary greater than company average.
-    Students scoring above class average.
-    Products costing more than average price.
-    Customers with maximum orders.
-    Employees working in the Sales department.
-    Latest order placed by each customer.
+    -> Employee salary greater than company average.
+    -> Students scoring above class average.
+    -> Products costing more than average price.
+    -> Customers with maximum orders.
+    -> Employees working in the Sales department.
+    -> Latest order placed by each customer.
 ---
 
 ## Syntax of Subqueries
@@ -65,19 +65,12 @@
     -> A Subquery is enclosed within parentheses.
     -> The Subquery executes before the Main Query (except Correlated Subqueries).
     -> The output of the Subquery is used by the Main Query.
-    -> A Subquery can return one value, one row, multiple rows or multiple columns.
     -> ORDER BY is generally not used inside a Subquery unless combined with LIMIT/OFFSET or database-specific features.
     -> Multiple levels of nested Subqueries are allowed.
     -> A Subquery can be used with
-    SELECT,
-    INSERT,
-    UPDATE,
-    DELETE.
+        SELECT,INSERT,UPDATE,DELETE.
     -> A Subquery can appear in
-    SELECT,
-    FROM,
-    WHERE,
-    HAVING clauses.
+        SELECT,FROM,WHERE,HAVING clauses.
 ---
 
 ## Advantages of Subqueries
@@ -117,27 +110,12 @@
     | Scalar            | One value (single column, single row) | Anywhere a value is expected  |
 ---
 
-## Database Difference
-    PostgreSQL
-        Supports all major types of Subqueries.
-
-    Oracle
-        Supports all major types of Subqueries.
-
-    MySQL
-        Supports all major types of Subqueries.
-
-    Difference
-        Syntax is almost identical.
-        Performance optimization differs between databases.
----
-
 ## Important Notes
--> Subqueries execute from the innermost query outward.
--> Not every problem should be solved using a Subquery.
--> JOINs are often faster than Correlated Subqueries.
--> EXISTS is generally preferred over IN for large datasets.
--> Understanding execution order is essential for interviews.
+    -> Subqueries execute from the innermost query outward.
+    -> Not every problem should be solved using a Subquery.
+    -> JOINs are often faster than Correlated Subqueries.
+    -> EXISTS is generally preferred over IN for large datasets.
+    -> Understanding execution order is essential for interviews.
 ---
 
 ## Interview Point
@@ -156,10 +134,215 @@
 
     Q. Where can a Subquery be used?
     Ans.
-        SELECT
-        FROM
-        WHERE
-        HAVING
-        INSERT
-        UPDATE
-        DELETE
+        SELECT, FROM, WHERE, HAVING, INSERT, UPDATE, DELETE
+---
+
+# Single Row Subquery
+
+## What is a Single Row Subquery?
+    -> A Single Row Subquery returns exactly one row.
+    -> It returns only one value (single column).
+    -> The Main Query compares its value with comparison operators.
+    -> It is the most commonly used type of Subquery.
+
+### Syntax
+    SELECT column_name FROM table_name
+    WHERE column_name operator
+    (   SELECT column_name
+        FROM table_name
+    );
+## Comparison Operators Used : 
+    =,>,<,>=,<=,<>
+
+## Example 1: Find employees earning more than the average salary.
+    SELECT ename,sal FROM emp
+    WHERE sal >
+    (    SELECT AVG(sal)
+        FROM emp
+    );
+### Explanation
+    Step 1 :
+        SELECT AVG(sal) FROM emp;
+        Result : 2073.21
+        ↓
+    Step 2: 
+        SELECT ename,sal
+        FROM emp
+        WHERE sal > 2073.21;
+## Example 2: Find employees working in the SALES department.
+    SELECT * FROM emp
+    WHERE deptno =
+    (   SELECT deptno FROM dept
+        WHERE dname='SALES'
+    );
+---
+
+## Important Notes
+    -> Single Row Subqueries return exactly one row.
+    -> If the Subquery returns multiple rows, an error occurs.
+    -> Comparison operators are used with Single Row Subqueries.
+    -> Aggregate functions like MAX(),MIN(),AVG(),COUNT(),SUM() usually return one row.
+    ---
+
+## Common Error
+### Incorrect Query
+    SELECT * FROM emp
+    WHERE sal =
+    (   SELECT sal
+        FROM emp
+        WHERE deptno=30
+    );
+
+    ERROR:
+    More than one row returned by a subquery used as an expression.
+    -> Department 30 has multiple employees.
+    -> The Subquery returns multiple salaries.
+    -> The '=' operator expects only one value.
+
+### Correct Solution
+    SELECT * FROM emp
+    WHERE sal IN
+    (   SELECT sal
+        FROM emp
+        WHERE deptno=30
+    );
+---
+
+## Real-Time Examples
+    -> Find employees earning above average salary.
+    -> Find the highest-priced product.
+    -> Find students scoring highest marks.
+    -> Find customers with maximum purchases.
+    -> Find employees hired after a specific employee.
+---
+
+## Interview Point
+    Q. What is a Single Row Subquery?
+    Ans.
+        A Subquery that returns exactly one row.
+
+    Q. Which operators are used with Single Row Subqueries?
+    Ans.
+        =, >, <, >=, <=, <>
+
+    Q. Why does the following query fail?
+        WHERE sal =
+        (
+        SELECT sal
+        FROM emp
+        WHERE deptno=30
+        );
+
+    Ans.
+        Because the Subquery returns multiple rows.
+
+    Q. Which aggregate functions usually
+    return a Single Row?
+    Ans.
+        COUNT(), SUM(), AVG(), MIN(), MAX()
+---
+
+## Best Practices
+    -> Ensure the Subquery returns only one row.
+    -> Prefer aggregate functions when a single value is expected.
+    -> Test the Subquery independently before embedding it.
+    -> Format Subqueries with proper indentation for readability.
+---
+
+## Common Mistakes
+    -> Using '=' when the Subquery returns multiple rows.
+    -> Forgetting parentheses around the Subquery.
+    -> Assuming a Subquery always returns one row.
+    -> Not testing the inner query first.
+---
+
+## Performance Tips
+    -> Execute the Subquery separately while debugging.
+    -> Use indexes on filtering columns when possible.
+    -> Prefer JOINs if they produce simpler and faster execution plans.
+    -> Avoid unnecessary nested Subqueries.
+---
+
+# Multiple Row Subquery
+
+## What is a Multiple Row Subquery?
+    -> A Multiple Row Subquery returns more than one row.
+    -> Since multiple values are returned, comparison operators (=, >, <, etc.) cannot be used directly.
+    -> Multiple Row Subqueries are commonly used with IN, NOT IN, ANY, ALL
+
+### Syntax
+    SELECT column_name FROM table_name
+    WHERE column_name operator
+    (   SELECT column_name
+        FROM table_name
+    );
+
+## Example 1: Find employees working in the SALES department.
+    SELECT ename,deptno FROM emp
+    WHERE deptno IN
+    (   SELECT deptno
+        FROM dept
+        WHERE dname='SALES'
+    );
+### Explanation
+    Step 1: 
+    The Subquery returns
+    30
+    ↓
+    Step 2
+    The Main Query becomes
+    WHERE deptno IN (30)
+ 
+## Important Notes
+    -> A Multiple Row Subquery returns more than one row.
+    -> Use IN, NOT IN, ANY, ALL according to the requirement.
+    -> Do not use '=' if the Subquery returns multiple rows.
+    -> Execute the Subquery separately while debugging.
+
+## Common Error
+### Incorrect Query
+    SELECT * FROM emp
+    WHERE sal =
+    (   SELECT sal
+        FROM emp
+        WHERE deptno=30
+    );
+    ERROR:
+    More than one row returned by a subquery.
+### Correct Query
+    SELECT * FROM emp
+    WHERE sal IN
+    (   SELECT sal
+        FROM emp
+        WHERE deptno=30
+    );
+
+## Interview Point
+    Q. What is a Multiple Row Subquery?
+    Ans.
+        A Subquery that returns more than one row.
+
+    Q. Why can't '=' be used with Multiple Row Subqueries?
+    Ans.
+        Because '=' expects a single value.
+
+    Q. Which operators are commonly used with Multiple Row Subqueries?
+    Ans.
+        IN, NOT IN, ANY, ALL
+
+## Best Practices
+    -> Test the Subquery separately.
+    -> Use the appropriate operator based on the number of rows returned.
+    -> Keep Subqueries properly indented for readability.
+
+## Common Mistakes
+    -> Using '=' instead of IN.
+    -> Assuming the Subquery returns only one row.
+    -> Ignoring NULL values while using NOT IN.
+    -> Not verifying the Subquery result.
+
+## Performance Tips
+    -> Use indexes on filtering columns.
+    -> Avoid unnecessary nested Subqueries.
+    -> For large datasets, compare execution plans of Subqueries and JOINs.
+---
