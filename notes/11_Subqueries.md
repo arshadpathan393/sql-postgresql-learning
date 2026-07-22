@@ -242,27 +242,6 @@
         COUNT(), SUM(), AVG(), MIN(), MAX()
 ---
 
-## Best Practices
-    -> Ensure the Subquery returns only one row.
-    -> Prefer aggregate functions when a single value is expected.
-    -> Test the Subquery independently before embedding it.
-    -> Format Subqueries with proper indentation for readability.
----
-
-## Common Mistakes
-    -> Using '=' when the Subquery returns multiple rows.
-    -> Forgetting parentheses around the Subquery.
-    -> Assuming a Subquery always returns one row.
-    -> Not testing the inner query first.
----
-
-## Performance Tips
-    -> Execute the Subquery separately while debugging.
-    -> Use indexes on filtering columns when possible.
-    -> Prefer JOINs if they produce simpler and faster execution plans.
-    -> Avoid unnecessary nested Subqueries.
----
-
 # Multiple Row Subquery
 
 ## What is a Multiple Row Subquery?
@@ -329,20 +308,411 @@
     Q. Which operators are commonly used with Multiple Row Subqueries?
     Ans.
         IN, NOT IN, ANY, ALL
-
-## Best Practices
-    -> Test the Subquery separately.
-    -> Use the appropriate operator based on the number of rows returned.
-    -> Keep Subqueries properly indented for readability.
-
-## Common Mistakes
-    -> Using '=' instead of IN.
-    -> Assuming the Subquery returns only one row.
-    -> Ignoring NULL values while using NOT IN.
-    -> Not verifying the Subquery result.
-
-## Performance Tips
-    -> Use indexes on filtering columns.
-    -> Avoid unnecessary nested Subqueries.
-    -> For large datasets, compare execution plans of Subqueries and JOINs.
 ---
+
+# Correlated Subquery
+## What is a Correlated Subquery?
+    -> A Correlated Subquery is a Subquery that depends on the Outer Query.
+    -> The Inner Query cannot execute independently.
+    -> It executes once for every row processed by the Outer Query.
+    -> It is also called a Repeating Subquery.
+
+### Syntax
+    SELECT column_name FROM table1 t1
+    WHERE condition
+    (   SELECT column_name
+        FROM table2 t2
+        WHERE t1.column_name = t2.column_name
+    );
+
+## How does it work?
+        Outer Query
+        ↓
+        Processes first row
+        ↓
+        Executes Subquery
+        ↓
+        Returns result
+        ↓
+        Processes second row
+        ↓
+        Executes Subquery again
+        ↓
+        Repeats until all rows are processed.
+
+## Example 1: Find employees earning more than the average salary of their department.
+        SELECT e1.ename,e1.sal,e1.deptno FROM emp e1
+        WHERE sal >
+        (   SELECT AVG(e2.sal)
+            FROM emp e2
+            WHERE e1.deptno = e2.deptno
+        );
+### Explanation
+        For every employee,
+        ↓
+        Calculate the average salary of that employee's department.
+        ↓
+        Compare employee salary with that department average.
+---
+
+# EXISTS
+## Definition
+    -> EXISTS checks whether the Subquery returns at least one row.
+    -> It returns
+    TRUE: if rows exist, otherwise FALSE.
+    -> Refer Operators chapter for EXISTS operator details.
+
+### Example: Find departments having employees.
+    SELECT * FROM dept d
+    WHERE EXISTS
+    (   SELECT 1
+        FROM emp e
+        WHERE d.deptno = e.deptno
+    );
+### Explanation
+    If at least one employee belongs to a department,
+    ↓
+    That department is returned.
+---
+
+# NOT EXISTS
+## Definition
+    -> NOT EXISTS returns rows when the Subquery returns no rows.
+### Example: Find departments having no employees.
+    SELECT * FROM dept d
+    WHERE NOT EXISTS
+    (   SELECT 1
+        FROM emp e
+        WHERE d.deptno = e.deptno
+    );
+
+## Difference
+
+    | Correlated Subquery           | Normal Subquery       |
+    |-------------------------------|-----------------------|
+    | Depends on Outer Query        | Independent           |
+    | Executes once for every row   | Executes only once    |
+    | Usually slower                | Usually faster        |
+
+## Real-Time Examples
+    -> Find highest-paid employee from every department.
+    -> Find lowest-paid employee from every department.
+    -> Find latest order of every customer.
+    -> Find first login of every user.
+    -> Find products priced above category average.
+
+## Interview Point
+    Q. What is a Correlated Subquery?
+    Ans.
+        A Subquery that depends on the Outer Query.
+
+    Q. Why is a Correlated Subquery slower?
+    Ans.
+        Because it executes once for every row.
+
+    Q. Difference between Correlated and Normal Subquery?
+    Ans.
+        Normal Subquery executes once.Correlated Subquery executes once for every row.
+
+    Q. When should EXISTS be used?
+    Ans.
+        When checking whether matching rows exist.
+---
+
+# Scalar Subquery
+
+## What is a Scalar Subquery?
+    -> A Scalar Subquery returns exactly One Row and One Column.
+    -> Since it returns a single value, it can be used wherever a value or expression is allowed.
+
+### Syntax
+    SELECT column_name,
+    (   SELECT column_name
+        FROM table_name
+    )
+    FROM table_name;
+## Example 1: Display employee name along with the company average salary.
+    SELECT ename,sal,
+    (   SELECT AVG(sal)
+        FROM emp
+    ) AS avg_salary
+    FROM emp;
+### Explanation
+    The Subquery executes once and returns a single value.
+    ↓
+    That value is displayed for every row.
+## Example 2: Display employee name along with total number of employees.
+    SELECT ename,
+    (   SELECT COUNT(*)
+        FROM emp
+    ) AS total_employees
+    FROM emp;
+---
+
+# Multiple Column Subquery
+## What is a Multiple Column Subquery?
+    -> A Multiple Column Subquery returns Multiple Columns from one or more rows.
+    -> The Main Query compares multiple columns together.
+
+### Syntax
+    SELECT * FROM table_name
+    WHERE
+    (   column1,
+        column2
+    ) IN
+    (   SELECT column1,
+            column2
+        FROM table_name
+    );
+
+## Example: Find employees whose salary and department are the highest in their department.
+    SELECT * FROM emp
+    WHERE
+    (   deptno,
+        sal
+    )IN
+    (   SELECT deptno,
+            MAX(sal)
+        FROM emp
+        GROUP BY deptno
+    );
+### Explanation
+    The Subquery returns Dept No
+    +
+    Maximum Salary
+    ↓
+    The Main Query compares both columns together.
+---
+
+# Nested Subquery
+## What is a Nested Subquery?
+    -> A Nested Subquery is a Subquery inside another Subquery.
+    -> SQL executes from the innermost query outward.
+
+### Syntax
+    SELECT * FROM table_name 
+    WHERE column_name IN
+    (   SELECT column_name FROM table_name
+        WHERE column_name
+        IN
+        (   SELECT column_name
+            FROM table_name
+        )
+    );
+## Example: Find employees working in the SALES department.
+    SELECT ename FROM emp
+    WHERE deptno IN
+    (   SELECT deptno
+        FROM dept
+        WHERE loc IN
+        (   SELECT loc
+            FROM dept
+            WHERE dname='SALES'
+        )
+    );
+## Execution Order
+    Innermost Query
+    ↓
+    Middle Query
+    ↓
+    Outer Query
+
+## Interview Point
+    Q. What is a Scalar Subquery?
+    Ans.
+        A Subquery that returns one row and one column.
+
+    Q. Where is a Scalar Subquery commonly used?
+    Ans.
+        SELECT, WHERE, HAVING
+
+    Q. What is a Multiple Column Subquery?
+    Ans.
+        A Subquery returning multiple columns.
+
+    Q. What is a Nested Subquery?
+    Ans.
+        A Subquery inside another Subquery.
+
+    Q. In which order are Nested Subqueries executed?
+    Ans.
+        From the innermost query to the outermost query.
+---
+
+# Using Subqueries in Different Clauses
+## Subquery in WHERE Clause
+    -> The WHERE clause is the most common place to use a Subquery.
+    -> It filters rows based on the result returned by the Subquery.
+### Example
+    SELECT ename,sal FROM emp
+    WHERE sal >
+    (   SELECT AVG(sal)
+        FROM emp
+    );
+
+## Subquery in SELECT Clause
+    -> A Subquery can be used in the SELECT list
+    -> It must return only one value (Scalar Subquery).
+
+### Example
+    SELECT ename, sal,
+    (   SELECT AVG(sal)
+        FROM emp
+    ) AS avg_salary
+    FROM emp;
+
+## Subquery in FROM Clause
+    -> A Subquery can be treated as a temporary table.
+    -> This temporary result is also called a Derived Table.
+    -> An alias is mandatory.
+
+### Example
+    SELECT * FROM
+    ( SELECT empno, ename, sal FROM emp
+    ) AS employee_data;
+
+## Subquery in HAVING Clause
+    -> A Subquery can be used in the HAVING clause.
+    -> It is generally used with aggregate functions.
+
+### Example
+    SELECT deptno, AVG(sal) FROM emp
+    GROUP BY deptno
+    HAVING AVG(sal) >
+    (   SELECT AVG(sal)
+        FROM emp
+    );
+
+## Summary
+
+    | Clause    | Purpose                                   |
+    |-----------|-------------------------------------------|
+    | WHERE     | Filter rows                               |
+    | SELECT    | Return calculated value                   |
+    | FROM      | Create a temporary table (Derived Table)  |
+    | HAVING    | Filter grouped data                       |
+
+## Important Notes
+    -> WHERE is the most common place to use Subqueries.
+    -> SELECT clause supports only Scalar Subqueries.
+    -> FROM clause requires an alias.
+    -> HAVING is mainly used with aggregate functions.
+
+## Interview Point
+    Q. In which clauses can a Subquery be used?
+    Ans.
+        SELECT, FROM, WHERE, HAVING
+
+    Q. Which clause most commonly uses Subqueries?
+    Ans.
+        WHERE
+
+    Q. Why is an alias required in the FROM clause?
+    Ans.
+        Because the Subquery result acts as a temporary table.
+
+    Q. Which type of Subquery is used in the SELECT clause?
+    Ans.
+        Scalar Subquery.
+---
+
+# Summary
+    -> A Subquery is a query written inside another SQL query.
+    -> It can return
+        One Value
+        One Row
+        Multiple Rows
+        Multiple Columns.
+    -> Main types are
+        Single Row
+        Multiple Row
+        Correlated
+        Scalar
+        Multiple Column
+        Nested
+    -> Subqueries are commonly used in
+        SELECT
+        FROM
+        WHERE
+        HAVING
+    -> Correlated Subqueries execute once for every row.
+    -> JOINs are often faster than Correlated Subqueries.
+---
+
+# Most Asked Interview Questions
+    1. What is a Subquery?
+    2. Types of Subqueries?
+    3. Difference between Single Row and Multiple Row Subquery?
+    4. Difference between Correlated and Normal Subquery?
+    5. Why can't '=' be used with Multiple Row Subqueries?
+    6. What is a Scalar Subquery?
+    7. Where can Subqueries be used?
+    8. What is a Derived Table?
+    9. Difference between JOIN and Subquery?
+    10. When should EXISTS be preferred?
+    11. Why are Correlated Subqueries slower?
+    12. Can a Subquery be used in INSERT, UPDATE and DELETE?
+---
+
+# Best Practices
+    -> Ensure the Subquery returns only one row when a single value is expected.
+    -> Prefer aggregate functions when a single value is expected.
+    -> Test each Subquery independently before embedding it.
+    -> Format Subqueries with proper indentation for readability.
+    -> Use the appropriate operator based on the number of rows returned (e.g., =, IN, EXISTS, ANY, ALL).
+    -> Use Correlated Subqueries only when necessary.
+    -> Prefer JOINs when they provide a simpler or more readable solution.
+    -> Use EXISTS instead of IN for large datasets when checking row existence.
+    -> Keep nesting levels as low as possible.
+    -> Keep Subqueries simple and readable.
+    -> Use meaningful aliases for Subqueries and Derived Tables.
+    -> Test the execution plan for performance.
+    -> Create indexes on columns used for filtering and joining.
+
+# Common Mistakes
+    -> Using '=' when the Subquery returns multiple rows.
+    -> Forgetting parentheses around the Subquery.
+    -> Assuming a Subquery always returns only one row.
+    -> Not testing the inner/Subquery independently before using it.
+    -> Ignoring NULL values while using NOT IN.
+    -> Forgetting the correlation condition in Correlated Subqueries.
+    -> Writing unnecessary Correlated Subqueries.
+    -> Using EXISTS when a simple JOIN is sufficient.
+    -> Returning multiple rows from a Scalar Subquery.
+    -> Mismatching the number of columns in Multiple Column Subqueries.
+    -> Creating deeply nested queries unnecessarily.
+    -> Forgetting the alias for a Derived Table in the FROM clause.
+    -> Returning multiple values from a Scalar Subquery in the SELECT clause.
+    -> Using HAVING instead of WHERE unnecessarily.
+
+# Performance Tips
+    -> Execute the Subquery independently while debugging.
+    -> Use indexes on filtering and correlated columns.
+    -> Prefer JOINs if they produce simpler and faster execution plans.
+    -> Prefer JOINs over Correlated Subqueries whenever possible.
+    -> Compare execution plans of Subqueries and JOINs for large datasets.
+    -> Correlated Subqueries are generally slower than Normal Subqueries.
+    -> Filter data as early as possible.
+    -> Avoid unnecessary or deeply nested Subqueries.
+    -> Check the execution plan for complex queries.
+    -> Create indexes on frequently searched columns.
+    -> Use EXISTS instead of IN for large datasets when checking row existence.
+---
+
+# Database Difference
+
+    | Feature               | PostgreSQL        | Oracle         | MySQL             |
+    |-----------------------|-------------------|----------------|-------------------|
+    | Single Row Subquery   | ✅                | ✅            | ✅                |
+    | Multiple Row Subquery | ✅                | ✅            | ✅                |
+    | Correlated Subquery   | ✅                | ✅            | ✅                |
+    | Scalar Subquery       | ✅                | ✅            | ✅                |
+    | Nested Subquery       | ✅                | ✅            | ✅                |
+    | Derived Table         | Alias Required    | Alias Optional | Alias Required    |
+
+---
+
+# Conclusion
+    -> Subqueries are one of the most important SQL concepts.
+    -> They are widely used in reporting, analytics and backend applications.
+    -> Understanding when to use Subqueries and when to use JOINs is an important skill for Java Backend Developers.
