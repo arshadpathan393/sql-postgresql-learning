@@ -1,4 +1,4 @@
--- HERE ALL PRACTICE QUERIES ARE WRITTEN FOR FUNCTIONS IN POSTGRESQL DATABASE
+-- HERE ALL PRACTICE QUERIES ARE WRITTEN FOR SUBQURIES IN POSTGRESQL DATABASE
 --EXAMPLES
 -- INSIDE WHERE
 SELECT ename,sal FROM emp1
@@ -70,7 +70,7 @@ WHERE dname = 'ACCOUNTING'
 --Find employees working in the SALES department.
 SELECT empno,ename,deptno FROM emp1
 WHERE deptno IN
-(SELECT deptno FROM emp1
+(SELECT deptno FROM dept
  WHERE dname = 'SALES'
 ) ;
 --Find employees working in ACCOUNTING or SALES departments.
@@ -132,19 +132,18 @@ WHERE hiredate =
 --Find departments having employees.
 SELECT deptno,dname FROM dept d
 WHERE EXISTS
-(SELECT deptno FROM emp e
+(SELECT 1 FROM emp e
 WHERE d.deptno = e.deptno)
 --Find departments having no employees.
 SELECT deptno,dname FROM dept d
 WHERE NOT EXISTS
-(SELECT deptno FROM emp e
+(SELECT 1 FROM emp e
 WHERE d.deptno = e.deptno)
 --Find Employees Earning Above Department Average
 SELECT empno,ename,sal,deptno FROM emp1 e1
 WHERE sal >(
 SELECT AVG(sal) FROM emp1 e2
 WHERE e1.deptno = e2.deptno
-GROUP BY deptno
 );
 --Find Highest Paid Employee in Every Department
 SELECT empno,ename,sal,deptno FROM emp1 e1
@@ -270,6 +269,7 @@ SELECT empno,ename,deptno FROM emp1
 WHERE deptno NOT IN (
 	SELECT DISTINCT deptno FROM emp1
 	WHERE UPPER(job) <> 'CLERK'
+	AND deptno IS NOT NULL
 );
 --Find employees whose job is not held by employees in department 10.
 SELECT empno,ename,job,deptno FROM emp1
@@ -449,7 +449,7 @@ AND sal <(
 );
 OR
 SELECT empno,ename,sal FROM emp1
-WHERE UPPER(SUBSTR(ename,1)) = 'S' AND sal >(
+WHERE UPPER(SUBSTR(ename,1,1)) = 'S' AND sal >(
 	SELECT sal FROM emp1
 	WHERE UPPER(ename) = 'ALLEN'
 )
@@ -481,10 +481,17 @@ WHERE deptno IN (
 	SELECT deptno FROM emp1
 	WHERE hiredate BETWEEN '01-JAN-1981' AND '31-DEC-1981'
 );
+OR
 SELECT deptno,dname,loc FROM dept
 WHERE deptno IN (
 	SELECT deptno FROM emp1
 	WHERE TO_CHAR(hiredate,'yyyy') = '1981'
+);
+OR
+SELECT deptno, dname, loc FROM dept
+WHERE deptno IN (
+    SELECT deptno FROM emp1
+    WHERE EXTRACT(YEAR FROM hiredate) = 1981
 );
 --Display the employee names having the maximum salary in the ACCOUNTING department.
 SELECT empno,ename,sal FROM emp1
@@ -518,7 +525,7 @@ WHERE deptno NOT IN (
 SELECT empno,ename,deptno FROM emp1
 WHERE deptno IN(
 	SELECT deptno FROM dept 
-	WHERE dname IN ('ACCOUNTING','OPERATION')
+	WHERE dname IN ('ACCOUNTING','OPERATIONS')
 );
 --List employees whose salary is greater than MILLER's salary.
 SELECT empno,ename,sal FROM emp1
@@ -532,7 +539,7 @@ WHERE job <> (SELECT job FROM emp1
 WHERE ename = 'ALLEN') AND 
 sal >(
 	SELECT sal FROM emp1
-	WHERE ename = 'MILLER'
+	WHERE ename = 'MARTIN'
 );
 --Display all employees whose location is the same as ADAMS' manager's location.
 SELECT empno,ename,deptno FROM emp1
